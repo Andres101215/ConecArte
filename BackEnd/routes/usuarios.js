@@ -8,7 +8,7 @@ const router = express.Router();
 router.get("/", async (req, res) => {
     try {
         const usuarios = await Usuario.find();
-        res.json(productos);
+        res.json(usuarios);
     } catch (error) {
         res.status(500).json({ mensaje: "Error al obtener los usuarios", error });
     }
