@@ -6,8 +6,8 @@ const cors = require("cors");
 const app = express();
 
 // 📌 Middlewares
-app.use(cors()); // Permite solicitudes desde cualquier origen (útil para frontend)
-app.use(express.json()); // Habilita JSON en las solicitudes
+app.use(cors());
+app.use(express.json());
 
 // 📌 Conectar a MongoDB Atlas
 mongoose.connect(process.env.MONGO_URI, {
@@ -19,9 +19,12 @@ mongoose.connect(process.env.MONGO_URI, {
 
 // 📌 Importar rutas
 const productosRoutes = require("./routes/productos");
+const usuariosRoutes = require("./routes/usuarios");
 
 // 📌 Usar rutas
 app.use("/api/productos", productosRoutes);
+app.use("/api/usuarios", usuariosRoutes);
+
 
 // 📌 Ruta principal de prueba
 app.get("/", (req, res) => {
