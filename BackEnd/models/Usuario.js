@@ -15,10 +15,7 @@ const usuarioSchema = new mongoose.Schema({
     tipo_documento: String,
     documento: String,
     celular: String,
-    fecha_creacion: {
-      type: Date,
-      default: Date.now
-    }
+    fecha_creacion: Date
 }, { collection: "Usuario" }); // Forzamos el nombre de la colección
 
 const Usuario = mongoose.model("Usuario", usuarioSchema); // El primer parámetro no afecta la colección en la BD
