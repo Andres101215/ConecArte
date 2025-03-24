@@ -20,10 +20,12 @@ mongoose.connect(process.env.MONGO_URI, {
 // 📌 Importar rutas
 const productosRoutes = require("./routes/productos");
 const usuariosRoutes = require("./routes/usuarios");
+const vendedoresRoutes = require("./routes/vendedores");
 
 // 📌 Usar rutas
 app.use("/api/productos", productosRoutes);
 app.use("/api/usuarios", usuariosRoutes);
+app.use("/api/vendedores", vendedoresRoutes);
 
 
 // 📌 Ruta principal de prueba
