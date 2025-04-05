@@ -4,7 +4,7 @@ const Vendedor = require("../models/Vendedor");
 const router = express.Router();
 
 
-// 📌 Obtener todos los productos (GET)
+//Obtener todos los vendedores (GET)
 router.get("/", async (req, res) => {
     try {
         const vendedores = await Vendedor.find();
@@ -14,10 +14,10 @@ router.get("/", async (req, res) => {
     }
 });
 
-// 📌 Obtener un producto por ID (GET)
+//Obtener un vendedor por ID (GET)
 router.get("/:id", async (req, res) => {
     try {
-        const vendedor = await Vendedor.findOne({ id: req.params.id });
+        const vendedor = await Vendedor.findById(req.params.id);
         if (!vendedor) {
             return res.status(404).json({ mensaje: "Vendedor no encontrado" });
         }
@@ -27,25 +27,21 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// 📌 Crear un nuevo producto (POST)
+// Crear un nuevo vendedor (POST)
 router.post("/", async (req, res) => {
     try {
         const nuevoVendedor = new Vendedor(req.body);
         await nuevoVendedor.save();
-        res.status(201).json(nuevoUsuario);
+        res.status(201).json(nuevoVendedor);
     } catch (error) {
         res.status(500).json({ mensaje: "Error al crear el vendedor", error });
     }
 });
 
-// 📌 Actualizar un producto por ID (PUT)
+// Actualizar un vendedor por ID (PUT)
 router.put("/:id", async (req, res) => {
     try {
-        const vendedorActualizado = await Vendedor.findOneAndUpdate(
-            { id: req.params.id }, 
-            req.body, 
-            { new: true }
-        );
+        const vendedorActualizado = await Vendedor.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!vendedorActualizado) {
             return res.status(404).json({ mensaje: "Vendedor no encontrado" });
         }
@@ -55,11 +51,11 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// 📌 Eliminar un producto por ID (DELETE)
+// Eliminar un vendedor por ID (DELETE)
 router.delete("/:id", async (req, res) => {
     try {
-        const vendedorEliminado = await Usuario.findOneAndDelete({ id: req.params.id });
-        if (!usuarioEliminado) {
+        const vendedorEliminado = await Vendedor.findByIdAndDelete(req.params.id);
+        if (!vendedorEliminado) {
             return res.status(404).json({ mensaje: "Vendedor no encontrado" });
         }
         res.json({ mensaje: "Vendedor eliminado" });

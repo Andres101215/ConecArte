@@ -41,7 +41,7 @@ router.post("/", async (req, res) => {
 // 📌 Actualizar un producto por ID (PUT)
 router.put("/:id", async (req, res) => {
     try {
-        const productoActualizado = awaitProducto.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const productoActualizado = await Producto.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!productoActualizado) {
             return res.status(404).json({ mensaje: "Producto no encontrado" });
         }
@@ -54,7 +54,7 @@ router.put("/:id", async (req, res) => {
 // 📌 Eliminar un producto por ID (DELETE)
 router.delete("/:id", async (req, res) => {
     try {
-        const productoEliminado = await Producto.findOneAndDelete(req.params.id);
+        const productoEliminado = await Producto.findByIdAndDelete(req.params.id);
         if (!productoEliminado) {
             return res.status(404).json({ mensaje: "Producto no encontrado" });
         }

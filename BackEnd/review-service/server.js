@@ -18,11 +18,11 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch((error) => console.error(" Error conectando a MongoDB:", error));
 
 //Importar rutas
-const reviewsRoutes = require("./routes/reviews");
+const reviewsRoutes = require("./routes/Resenas");
 
 
 //Usar rutas
-app.use("/api/reviews", reviewsRoutes);
+app.use("/api/Resenas", reviewsRoutes);
 
 
 //Ruta principal de prueba

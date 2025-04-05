@@ -54,7 +54,7 @@ router.put("/:id", async (req, res) => {
 // Eliminar un producto por ID (DELETE)
 router.delete("/:id", async (req, res) => {
     try {
-        const usuarioEliminado = await Usuario.findOneAndDelete(req.params.id);
+        const usuarioEliminado = await Usuario.findByIdAndDelete(req.params.id);
         if (!usuarioEliminado) {
             return res.status(404).json({ mensaje: "Usuario no encontrado" });
         }

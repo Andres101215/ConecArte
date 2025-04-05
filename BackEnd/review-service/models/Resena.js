@@ -2,14 +2,11 @@
 const mongoose = require('mongoose');
 
 const resenaSchema = new mongoose.Schema({
-  nombre_tienda: String,
-  descripcion_tienda:  String,
-   categorias:  [String],
-  experiencia:Number,
-  redes_sociales: [String],
-  productos: String, 
-  fecha_registro: Date,
-  id_usuario:String
+  id_producto: String,
+  id_usuario: String,
+  calificacion: Number,
+  comentario: String,
+  fecha: Date
 }, { collection: "Reseña" }); // Forzamos el nombre de la colección
 
 const Resena = mongoose.model('Reseña', resenaSchema);

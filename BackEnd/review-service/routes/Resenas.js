@@ -1,10 +1,10 @@
 const express = require("express");
-const Resena = require("../models/review");
+const Resena = require("../models/Resena");
 
 const router = express.Router();
 
 
-// 📌 Obtener todos los productos (GET)
+//Obtener todos los reseñas (GET)
 router.get("/", async (req, res) => {
     try {
         const resena = await Resena.find();
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// 📌 Obtener un producto por ID (GET)
+//Obtener un reseña por ID (GET)
 router.get("/:id", async (req, res) => {
     try {
         const resena = await Resena.findById(req.params.id);
@@ -27,7 +27,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// 📌 Crear un nuevo producto (POST)
+//Crear una nueva reseña (POST)
 router.post("/", async (req, res) => {
     try {
         const nuevaResena = new Resena(req.body);
@@ -38,10 +38,10 @@ router.post("/", async (req, res) => {
     }
 });
 
-// 📌 Actualizar un producto por ID (PUT)
+//Actualizar una reseña por ID (PUT)
 router.put("/:id", async (req, res) => {
     try {
-        const resenaActualizado = awaitresena.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const resenaActualizado = await resena.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!resenaActualizado) {
             return res.status(404).json({ mensaje: "Reseña no encontrada" });
         }
@@ -51,10 +51,10 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// 📌 Eliminar un producto por ID (DELETE)
+//Eliminar una reseña por ID (DELETE)
 router.delete("/:id", async (req, res) => {
     try {
-        const resenaEliminado = await Resena.findOneAndDelete(req.params.id);
+        const resenaEliminado = await Resena.findByIdAndDelete(req.params.id);
         if (!resenaEliminado) {
             return res.status(404).json({ mensaje: "Reseña no encontrada" });
         }

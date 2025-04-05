@@ -18,21 +18,21 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch((error) => console.error(" Error conectando a MongoDB:", error));
 
 //Importar rutas
-const productosRoutes = require("./routes/productos");
-const vendedoresRoutes = require("./routes/vendedores");
+const conversacionesRoutes = require("./routes/conversaciones");
+const mensajesRoutes = require("./routes/mensajes");
 
 //Usar rutas
-app.use("/api/productos", productosRoutes);
-app.use("/api/vendedores", vendedoresRoutes);
+app.use("/api/conversaciones", conversacionesRoutes);
+app.use("/api/mensajes", mensajesRoutes);
 
 
 //Ruta principal de prueba
 app.get("/", (req, res) => {
-    res.send("API del Marketplace ConecArte!");
+    res.send("API chat service!");
 });
 
 //Iniciar servidor
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5004;
 app.listen(PORT, () => {
     console.log(` Servidor corriendo en http://localhost:${PORT}`);
 });
