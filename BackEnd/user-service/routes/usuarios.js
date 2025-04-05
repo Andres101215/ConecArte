@@ -4,7 +4,7 @@ const Usuario = require("../models/Usuario");
 const router = express.Router();
 
 
-// 📌 Obtener todos los productos (GET)
+//Obtener todos los productos (GET)
 router.get("/", async (req, res) => {
     try {
         const usuarios = await Usuario.find();
@@ -14,7 +14,7 @@ router.get("/", async (req, res) => {
     }
 });
 
-// 📌 Obtener un producto por ID (GET)
+//Obtener un producto por ID (GET)
 router.get("/:id", async (req, res) => {
     try {
         const usuario = await Usuario.findById(req.params.id);
@@ -27,7 +27,7 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-// 📌 Crear un nuevo producto (POST)
+//Crear un nuevo producto (POST)
 router.post("/", async (req, res) => {
     try {
         const nuevoUsuario = new Usuario(req.body);
@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
     }
 });
 
-// 📌 Actualizar un producto por ID (PUT)
+//Actualizar un producto por ID (PUT)
 router.put("/:id", async (req, res) => {
     try {
         const usuarioActualizado = await Usuario.findByIdAndUpdate(req.params.id, req.body, { new: true });
@@ -51,7 +51,7 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// 📌 Eliminar un producto por ID (DELETE)
+// Eliminar un producto por ID (DELETE)
 router.delete("/:id", async (req, res) => {
     try {
         const usuarioEliminado = await Usuario.findOneAndDelete(req.params.id);

@@ -19,20 +19,17 @@ mongoose.connect(process.env.MONGO_URI, {
 
 //Importar rutas
 const usuariosRoutes = require("./routes/usuarios");
-const vendedoresRoutes = require("./routes/vendedores");
 
 //Usar rutas
 app.use("/api/usuarios", usuariosRoutes);
-app.use("/api/vendedores", vendedoresRoutes);
-
 
 //Ruta principal de prueba
 app.get("/", (req, res) => {
-    res.send("API del Marketplace ConecArte!");
+    res.send("API de Usuarios!");
 });
 
 //Iniciar servidor
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
     console.log(` Servidor corriendo en http://localhost:${PORT}`);
 });

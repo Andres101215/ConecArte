@@ -19,16 +19,13 @@ mongoose.connect(process.env.MONGO_URI, {
 
 //Importar rutas
 const productosRoutes = require("./routes/productos");
-const vendedoresRoutes = require("./routes/vendedores");
 
 //Usar rutas
 app.use("/api/productos", productosRoutes);
-app.use("/api/vendedores", vendedoresRoutes);
-
 
 //Ruta principal de prueba
 app.get("/", (req, res) => {
-    res.send("API del Marketplace ConecArte!");
+    res.send("API de Productos!");
 });
 
 //Iniciar servidor
