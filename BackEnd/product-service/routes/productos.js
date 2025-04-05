@@ -1,5 +1,5 @@
 const express = require("express");
-const Producto = require("../models/Producto");
+const Producto = require("../product-service/models/Producto");
 
 const router = express.Router();
 
@@ -17,7 +17,7 @@ router.get("/", async (req, res) => {
 // 📌 Obtener un producto por ID (GET)
 router.get("/:id", async (req, res) => {
     try {
-        const producto = await Producto.findOne({ id: req.params.id });
+        const producto = await Producto.findById(req.params.id);
         if (!producto) {
             return res.status(404).json({ mensaje: "Producto no encontrado" });
         }
@@ -41,11 +41,7 @@ router.post("/", async (req, res) => {
 // 📌 Actualizar un producto por ID (PUT)
 router.put("/:id", async (req, res) => {
     try {
-        const productoActualizado = await Producto.findOneAndUpdate(
-            { id: req.params.id }, 
-            req.body, 
-            { new: true }
-        );
+        const productoActualizado = awaitProducto.findByIdAndUpdate(req.params.id, req.body, { new: true });
         if (!productoActualizado) {
             return res.status(404).json({ mensaje: "Producto no encontrado" });
         }
@@ -58,7 +54,7 @@ router.put("/:id", async (req, res) => {
 // 📌 Eliminar un producto por ID (DELETE)
 router.delete("/:id", async (req, res) => {
     try {
-        const productoEliminado = await Producto.findOneAndDelete({ id: req.params.id });
+        const productoEliminado = await Producto.findOneAndDelete(req.params.id);
         if (!productoEliminado) {
             return res.status(404).json({ mensaje: "Producto no encontrado" });
         }
