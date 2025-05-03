@@ -1,6 +1,5 @@
 const express = require("express");
 const Mensaje = require("../models/Mensaje");
-
 const router = express.Router();
 
 
