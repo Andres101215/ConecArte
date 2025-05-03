@@ -9,7 +9,7 @@ require('./routes/seller')(app);
 require('./routes/review')(app);
 require('./routes/product')(app);
 //require('./routes/payment')(app);
-//require('./routes/order')(app);
+//require('./routes/billing')(app);
 //require('./routes/image')(app);
 require('./routes/conversation')(app);
 require('./routes/message')(app);
