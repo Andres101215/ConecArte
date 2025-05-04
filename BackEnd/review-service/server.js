@@ -22,7 +22,7 @@ const reviewsRoutes = require("./routes/Resenas");
 
 
 //Usar rutas
-app.use("/api/Resenas", reviewsRoutes);
+app.use("/resenas", reviewsRoutes);
 
 
 //Ruta principal de prueba

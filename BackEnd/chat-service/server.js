@@ -22,8 +22,8 @@ const conversacionesRoutes = require("./routes/conversaciones");
 const mensajesRoutes = require("./routes/mensajes");
 
 //Usar rutas
-app.use("/api/conversaciones", conversacionesRoutes);
-app.use("/api/mensajes", mensajesRoutes);
+app.use("/conversaciones", conversacionesRoutes);
+app.use("/mensajes", mensajesRoutes);
 
 
 //Ruta principal de prueba
