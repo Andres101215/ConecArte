@@ -17,7 +17,7 @@ export default function RegisterUser() {
   const [tipoUsuario, setTipoUsuario] = useState('Usuario'); 
   const fechaCreacion = new Date().toISOString();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const userData = {
       nombre,
@@ -36,8 +36,28 @@ export default function RegisterUser() {
       celular,
       fecha_creacion: fechaCreacion,
     };
-    console.log(userData);
-    // Aquí luego se enviarán los datos al backend
+    try {
+      const response = await fetch('http://localhost:5001/usuarios', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+  
+      if (response.ok) {
+        const result = await response.json();
+        console.log('Usuario registrado con éxito:', result);
+        alert('Registro exitoso');
+        // Aquí puedes redirigir o limpiar el formulario si deseas
+      } else {
+        console.error('Error al registrar usuario');
+        alert('Error en el registro');
+      }
+    } catch (error) {
+      console.error('Error en la solicitud:', error);
+      alert('No se pudo conectar al servidor');
+    }
   };
 
   return (
