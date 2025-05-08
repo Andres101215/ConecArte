@@ -5,6 +5,9 @@ import Login from './pages/Login';
 import RegisterUser from './pages/RegisterUser';
 import RegisterSeller from './pages/RegisterSeller';
 import Navbar from './components/Navbar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+
 
 function App() {
   return (

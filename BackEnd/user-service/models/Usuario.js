@@ -6,7 +6,11 @@ const usuarioSchema = new mongoose.Schema({
     correo: String,
     contraseña: String,
     tipo_usuario: String,
-    username: String,
+    username: {
+        type: String,
+        unique: true, // Aseguramos que el username sea único
+        required: true // Aseguramos que el username sea requerido
+    },
     fecha_nacimiento: Date,
     departamento: String,
     ciudad: String,

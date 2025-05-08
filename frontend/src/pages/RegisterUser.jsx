@@ -16,6 +16,9 @@ export default function RegisterUser() {
   const [celular, setCelular] = useState('');
   const [tipoUsuario, setTipoUsuario] = useState('Usuario'); 
   const fechaCreacion = new Date().toISOString();
+  const [validated, setValidated] = useState(false);
+  const [usernameError, setUsernameError] = useState(false);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,6 +39,7 @@ export default function RegisterUser() {
       celular,
       fecha_creacion: fechaCreacion,
     };
+
     try {
       const response = await fetch('http://localhost:5001/usuarios', {
         method: 'POST',
@@ -44,53 +48,117 @@ export default function RegisterUser() {
         },
         body: JSON.stringify(userData),
       });
-  
+
       if (response.ok) {
         const result = await response.json();
         console.log('Usuario registrado con éxito:', result);
         alert('Registro exitoso');
-        // Aquí puedes redirigir o limpiar el formulario si deseas
       } else {
+        const errorData = await response.json();
         console.error('Error al registrar usuario');
-        alert('Error en el registro');
+        if (errorData?.mensaje?.includes('El nombre de usuario ya existe')) {
+          setUsernameError(true);
+        }
+        else{
+          alert(errorData.mensaje || 'Error al registrar usuario');
+        }
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
       alert('No se pudo conectar al servidor');
     }
-  };
+  setValidated(true);
+};
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Registro Usuario</h2>
-      <input type="text" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-      <input type="text" placeholder="Apellido" value={apellido} onChange={(e) => setApellido(e.target.value)} />
-      <input type="email" placeholder="Correo" value={correo} onChange={(e) => setCorreo(e.target.value)} />
-      <input type="password" placeholder="Contraseña" value={contraseña} onChange={(e) => setContraseña(e.target.value)} />
-      <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input type="date" placeholder="Fecha Nacimiento" value={fechaNacimiento} onChange={(e) => setFechaNacimiento(e.target.value)} />
-      <input type="text" placeholder="Departamento" value={departamento} onChange={(e) => setDepartamento(e.target.value)} />
-      <input type="text" placeholder="Ciudad" value={ciudad} onChange={(e) => setCiudad(e.target.value)} />
-      <input type="text" placeholder="Dirección" value={direccion} onChange={(e) => setDireccion(e.target.value)} />
-      <select value={genero} onChange={(e) => setGenero(e.target.value)}>
-        <option value="">Selecciona Género</option>
-        <option value="M">Masculino</option>
-        <option value="F">Femenino</option>
-        <option value="Otro">Otro</option>
-      </select>
-      <select value={tipoDocumento} onChange={(e) => setTipoDocumento(e.target.value)}>
-        <option value="">Selecciona Tipo Documento</option>
-        <option value="T.I">T.I</option>
-        <option value="C.C">C.C</option>
-        <option value="Pasaporte">Pasaporte</option>
-      </select>
-      <input type="text" placeholder="Documento" value={documento} onChange={(e) => setDocumento(e.target.value)} />
-      <input type="text" placeholder="Celular" value={celular} onChange={(e) => setCelular(e.target.value)} />
-      <select value={tipoUsuario} onChange={(e) => setTipoUsuario(e.target.value)}>
-        <option value="Usuario">Usuario</option>
-        <option value="Vendedor">Vendedor</option>
-      </select>
-      <button type="submit">Registrarse</button>
-    </form>
+    <div className="container mt-5">
+      <h2 className="mb-4">Registro Usuario</h2>
+      <form onSubmit={handleSubmit} className={`needs-validation ${validated ? 'was-validated' : ''}`} noValidate>
+        <div className="mb-3">
+          <input type="text" className="form-control" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+          <div className="invalid-feedback">Por favor ingrese su nombre.</div>
+        </div>
+
+        <div className="mb-3">
+          <input type="text" className="form-control" placeholder="Apellido" value={apellido} onChange={(e) => setApellido(e.target.value)} required />
+          <div className="invalid-feedback">Por favor ingrese su apellido.</div>
+        </div>
+
+        <div className="mb-3">
+          <input type="email" className="form-control" placeholder="Correo" value={correo} onChange={(e) => setCorreo(e.target.value)} required />
+          <div className="invalid-feedback">Por favor ingrese su correo electrónico.</div>
+        </div>
+
+        <div className="mb-3">
+          <input type="password" className="form-control" placeholder="Contraseña" value={contraseña} onChange={(e) => setContraseña(e.target.value)} required />
+          <div className="invalid-feedback">Por favor ingrese su contraseña.</div>
+        </div>
+
+        <div className="mb-3">
+          <input type="text" className={`form-control ${usernameError ? 'is-invalid' : ''}`} placeholder="Username" value={username} onChange={(e) => {setUsername(e.target.value); setUsernameError(false)}} required />
+          <div className="invalid-feedback">{usernameError ? 'El nombre de usuario ya está en uso' : 'Por favor ingrese su nombre de usuario.'}</div>
+        </div>
+
+        <div className="mb-3">
+          <input type="date" className="form-control" value={fechaNacimiento} onChange={(e) => setFechaNacimiento(e.target.value)} required />
+          <div className="invalid-feedback">Por favor ingrese su fecha de nacimiento.</div>
+        </div>
+
+        <div className="mb-3">
+          <input type="text" className="form-control" placeholder="Departamento" value={departamento} onChange={(e) => setDepartamento(e.target.value)} required />
+          <div className="invalid-feedback">Por favor ingrese su departamento.</div>
+        </div>
+
+        <div className="mb-3">
+          <input type="text" className="form-control" placeholder="Ciudad" value={ciudad} onChange={(e) => setCiudad(e.target.value)} required />
+          <div className="invalid-feedback">Por favor ingrese su ciudad.</div>
+        </div>
+
+        <div className="mb-3">
+          <input type="text" className="form-control" placeholder="Dirección" value={direccion} onChange={(e) => setDireccion(e.target.value)} required />
+          <div className="invalid-feedback">Por favor ingrese su dirección.</div>
+        </div>
+
+        <div className="mb-3">
+          <select className="form-select" value={genero} onChange={(e) => setGenero(e.target.value)} required>
+            <option value="">Selecciona Género</option>
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <div className="invalid-feedback">Por favor seleccione su género.</div>
+        </div>
+
+        <div className="mb-3">
+          <select className="form-select" value={tipoDocumento} onChange={(e) => setTipoDocumento(e.target.value)} required>
+            <option value="">Selecciona Tipo Documento</option>
+            <option value="T.I">T.I</option>
+            <option value="C.C">C.C</option>
+            <option value="Pasaporte">Pasaporte</option>
+          </select>
+          <div className="invalid-feedback">Por favor seleccione su tipo de documento.</div>
+        </div>
+
+        <div className="mb-3">
+          <input type="number" className="form-control" placeholder="Documento" value={documento} onChange={(e) => setDocumento(e.target.value)} required />
+          <div className="invalid-feedback">Por favor ingrese su número de documento.</div>
+        </div>
+
+        <div className="mb-3">
+          <input type="number" className="form-control" placeholder="Celular" value={celular} onChange={(e) => setCelular(e.target.value)} required />
+          <div className="invalid-feedback">Por favor ingrese su número de celular.</div>
+        </div>
+
+        <div className="mb-3">
+          <select className="form-select" value={tipoUsuario} onChange={(e) => setTipoUsuario(e.target.value)} required>
+            <option value="Usuario">Usuario</option>
+            <option value="Vendedor">Vendedor</option>
+          </select>
+          <div className="invalid-feedback">Por favor seleccione el tipo de usuario.</div>
+        </div>
+
+        <button type="submit" className="btn btn-primary">Registrarse</button>
+      </form>
+    </div>
   );
 }

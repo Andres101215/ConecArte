@@ -27,9 +27,17 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-//Crear un nuevo producto (POST)
+//Crear un nuevo usuario (POST)
 router.post("/", async (req, res) => {
     try {
+        const { username } = req.body;
+        // Verifica si el username ya existe
+        const usuarioExistente = await Usuario.findOne({ username });
+        console.log(username);
+        if (usuarioExistente) {
+        console.log("El nombre de usuario ya existe");
+        return res.status(400).json({ mensaje: "El nombre de usuario ya existe" });
+        }
         const nuevoUsuario = new Usuario(req.body);
         await nuevoUsuario.save();
         res.status(201).json(nuevoUsuario);
