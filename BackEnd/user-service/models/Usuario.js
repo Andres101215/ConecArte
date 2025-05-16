@@ -6,11 +6,7 @@ const usuarioSchema = new mongoose.Schema({
     correo: String,
     contraseña: String,
     tipo_usuario: String,
-    username: {
-        type: String,
-        unique: true, // Aseguramos que el username sea único
-        required: true // Aseguramos que el username sea requerido
-    },
+    username: String,
     fecha_nacimiento: Date,
     departamento: String,
     ciudad: String,
@@ -20,8 +16,8 @@ const usuarioSchema = new mongoose.Schema({
     documento: String,
     celular: String,
     fecha_creacion: Date
-}, { collection: "Usuario" }); // Forzamos el nombre de la colección
+}, { collection: "Usuario" }); 
 
-const Usuario = mongoose.model("Usuario", usuarioSchema); // El primer parámetro no afecta la colección en la BD
+const Usuario = mongoose.model("Usuario", usuarioSchema); 
 
 module.exports = Usuario;
