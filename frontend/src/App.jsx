@@ -9,10 +9,10 @@ import PanelAdmin from './pages/panelAdmin';
 import PanelUser from './pages/panelUser';
 import PanelSeller from './pages/panelSeller';
 import WompiRespuesta from './pages/wompi-respuesta';
+import ProductoDetalle from './pages/ProductoDetalle';
 import Navbar from './components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-
 
 function App() {
   return (
@@ -28,6 +28,7 @@ function App() {
         <Route path="/panelAdmin" element={<PanelAdmin />} />
         <Route path="/panelUser" element={<PanelUser />} />
         <Route path="/panelSeller" element={<PanelSeller />} />
+        <Route path="/producto/:id" element={<ProductoDetalle />} />
       </Routes>
     </Router>
   );
