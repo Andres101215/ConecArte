@@ -2,6 +2,7 @@ const express = require("express");
 const Usuario = require("../models/Usuario");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
+const axios = require("axios");
 const router = express.Router();
 
 
@@ -32,7 +33,6 @@ router.get("/:id", async (req, res) => {
 
 //Crear un nuevo usuario (POST)
 router.post("/", async (req, res) => {
-   
     try {
         const {
             nombre,
@@ -85,6 +85,21 @@ router.post("/", async (req, res) => {
 
         // Guardar en la base de datos
         await nuevoUsuario.save();
+
+        // Crear el carrito para el usuario llamando al otro servicio
+        if (nuevoUsuario.tipo_usuario == "usuario") {
+            try {
+                await axios.post("http://localhost:5005/carritos", {
+                    id_usuario: nuevoUsuario._id,
+                    productos: [],
+                    total: 0
+                });
+            } catch (carritoError) {
+                console.error("Error al crear carrito:", carritoError.message);
+                // No cortamos el proceso por error en carrito, solo notificamos
+            }
+        }
+
 
         res.status(201).json({ mensaje: "Usuario creado correctamente", usuario: nuevoUsuario });
 
@@ -140,12 +155,12 @@ router.post("/login", async (req, res) => {
 
         // Generar token
         const token = jwt.sign(
-            { id: usuario._id, correo: usuario.correo ,tipo_usuario: usuario.tipo_usuario},
+            { id: usuario._id, correo: usuario.correo, tipo_usuario: usuario.tipo_usuario },
             process.env.JWT_SECRET,
             { expiresIn: "1h" }
         );
-         
-        res.json({ mensaje: "Login exitoso", token  });
+
+        res.json({ mensaje: "Login exitoso", token });
     } catch (error) {
         res.status(500).json({ mensaje: "Error en el login", error });
     }

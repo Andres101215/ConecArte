@@ -151,8 +151,8 @@ export default function RegisterUser() {
 
         <div className="mb-3">
           <select className="form-select" value={tipoUsuario} onChange={(e) => setTipoUsuario(e.target.value)} required>
-            <option value="Usuario">Usuario</option>
-            <option value="Vendedor">Vendedor</option>
+            <option value="usuario">Usuario</option>
+            <option value="vendedor">Vendedor</option>
           </select>
           <div className="invalid-feedback">Por favor seleccione el tipo de usuario.</div>
         </div>
