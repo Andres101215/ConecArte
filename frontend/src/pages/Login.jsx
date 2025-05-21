@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import { jwtDecode } from "jwt-decode";
-import { useAuth } from '../Contexts/AuthContext'; // 👈 Importa el contexto
+import { useAuth } from '../Contexts/AuthContext';
+import './Login.css'; // 👈 Importa el nuevo CSS
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Login() {
-  const { login } = useAuth(); // 👈 Usa login del contexto
+  const { login } = useAuth();
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [mensaje, setMensaje] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     try {
       const response = await fetch('http://localhost:5001/usuarios/login', {
         method: 'POST',
@@ -23,19 +24,11 @@ export default function Login() {
       const data = await response.json();
 
       if (response.ok) {
-        login(data.token); // 👈 Aquí llamamos login del contexto
-
+        login(data.token); // Guarda el token en contexto
         const decoded = jwtDecode(data.token);
         setMensaje('Inicio de sesión exitoso');
 
-
-
-        // Redirige según tipo de usuario
-
-
-        
         switch (decoded.tipo_usuario) {
-          
           case "administrador":
             window.location.href = "/panelAdmin";
             break;
@@ -60,22 +53,34 @@ export default function Login() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h2>Iniciar Sesión</h2>
-      <input
-        type="email"
-        placeholder="Correo"
-        value={correo}
-        onChange={(e) => setCorreo(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Contraseña"
-        value={contraseña}
-        onChange={(e) => setContraseña(e.target.value)}
-      />
-      <button type="submit">Entrar</button>
-      {mensaje && <p>{mensaje}</p>}
-    </form>
+    <div className="login-container">
+      <div className="login-overlay">
+        <form onSubmit={handleSubmit} className="login-form-box">
+          <h2 className="text-center mb-4">Iniciar Sesión</h2>
+
+          <input
+            type="email"
+            className="form-control mb-3"
+            placeholder="Correo"
+            value={correo}
+            onChange={(e) => setCorreo(e.target.value)}
+            required
+          />
+
+          <input
+            type="password"
+            className="form-control mb-3"
+            placeholder="Contraseña"
+            value={contraseña}
+            onChange={(e) => setContraseña(e.target.value)}
+            required
+          />
+
+          <button type="submit" className="btn btn-primary w-100">Entrar</button>
+
+          {mensaje && <p className="text-danger mt-3 text-center">{mensaje}</p>}
+        </form>
+      </div>
+    </div>
   );
 }
