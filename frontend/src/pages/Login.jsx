@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { jwtDecode } from "jwt-decode";
-
+import { useAuth } from '../Contexts/AuthContext'; // 👈 Importa el contexto
 
 export default function Login() {
+  const { login } = useAuth(); // 👈 Usa login del contexto
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [mensaje, setMensaje] = useState('');
@@ -16,25 +17,25 @@ export default function Login() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          correo,
-          contraseña
-        })
+        body: JSON.stringify({ correo, contraseña })
       });
+
       const data = await response.json();
 
       if (response.ok) {
-        // Por ejemplo, guardar token en localStorage
-        localStorage.setItem('token', data.token);
-        setMensaje('Inicio de sesión exitoso');
-        console.log('Token recibido:', data.token);
+        login(data.token); // 👈 Aquí llamamos login del contexto
+
         const decoded = jwtDecode(data.token);
-        console.log("Tipo de usuario:", decoded.tipo_usuario);
-        console.log("Id de usuario:", decoded.id);
+        setMensaje('Inicio de sesión exitoso');
 
 
+
+        // Redirige según tipo de usuario
+
+
+        
         switch (decoded.tipo_usuario) {
-
+          
           case "administrador":
             window.location.href = "/panelAdmin";
             break;
@@ -44,15 +45,12 @@ export default function Login() {
           case "vendedor":
             window.location.href = "/panelSeller";
             break;
-
           default:
-            // En caso de que no coincida con ningún tipo
-            console.warn("Tipo de usuario desconocido");
-            window.location.href = "/login";
+            window.location.href = "/";
             break;
         }
+
       } else {
-        // Error de autenticación
         setMensaje(data.mensaje || 'Error al iniciar sesión');
       }
     } catch (error) {

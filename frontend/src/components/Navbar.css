@@ -1,0 +1,23 @@
+body {
+    padding-top: 70px; /* para que el contenido no quede escondido bajo el navbar fijo */
+  }
+  
+  .navbar .nav-link {
+    color: white;
+    transition: color 0.2s ease-in-out;
+  }
+  
+  .navbar .nav-link:hover {
+    color: #ffc107; /* Amarillo bandera Colombia */
+  }
+  
+  .navbar .btn-outline-warning {
+    border-radius: 20px;
+    padding: 5px 15px;
+  }
+  
+  .navbar {
+    min-height: 70px;        /* Aumenta la altura mínima del navbar */
+    padding-top: 20px;       /* Más espacio arriba */
+    padding-bottom: 20px;    /* Más espacio abajo */
+  }
