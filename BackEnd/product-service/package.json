@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Proyecto Software 2",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -14,5 +11,12 @@
     "express": "^4.21.2",
     "mongodb": "^6.14.2",
     "mongoose": "^8.12.1"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.1.1"
+  },
+  "scripts": {
+    "test": "jest"
   }
 }
