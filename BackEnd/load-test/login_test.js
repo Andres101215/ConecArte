@@ -2,15 +2,15 @@ import http from 'k6/http';
 import { sleep, check } from 'k6';
 
 export let options = {
-  vus: 50, // usuarios virtuales simultáneos
-  duration: '30s', // duración de la prueba
+  vus: 50,
+  duration: '30s',
 };
 
 export default function () {
-  const url = 'http://localhost:3000/api/auth/login';
+  const url = 'http://localhost:5001/usuarios/login'; 
   const payload = JSON.stringify({
-    email: 'usuario@ejemplo.com',
-    password: '123456',
+    correo: 'andres.puentesl2@user.com',
+    contraseña: 'user12345',
   });
 
   const params = {
@@ -20,10 +20,11 @@ export default function () {
   };
 
   let res = http.post(url, payload, params);
+
   check(res, {
     'status es 200': (r) => r.status === 200,
     'tiempo < 500ms': (r) => r.timings.duration < 500,
   });
 
-  sleep(1); // simula tiempo entre interacciones
+  sleep(1);
 }

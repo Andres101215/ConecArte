@@ -16,8 +16,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-
-
 //Obtener un usuario por ID (GET)
 router.get("/:id", async (req, res) => {
     try {
@@ -62,7 +60,7 @@ router.post("/", async (req, res) => {
         }
 
         // Encriptar la contraseña
-        const contraseñaEncriptada = await bcrypt.hash(contraseña, 10);
+        const contraseñaEncriptada = await bcrypt.hash(contraseña, 8);
 
         // Crear el nuevo usuario
         const nuevoUsuario = new Usuario({

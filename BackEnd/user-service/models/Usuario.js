@@ -3,7 +3,12 @@ const mongoose = require("mongoose");
 const usuarioSchema = new mongoose.Schema({
     nombre: String,
     apellido: String,
-    correo: String,
+    correo:{
+    type: String,
+    required: true,
+    unique: true,      // Asegura unicidad
+    index: true        // Crea índice
+     },
     contraseña: String,
     tipo_usuario: String,
     username: String,
