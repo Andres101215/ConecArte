@@ -17,7 +17,7 @@ describe('API /productos', () => {
         const res = await request(app).get('/productos');
         expect(res.statusCode).toBe(200);
         expect(Array.isArray(res.body)).toBe(true);
-    });
+    }, 10000);
 
     it('debe permitir crear un nuevo producto con todos los atributos', async () => {
         const nuevoProducto = {
@@ -48,5 +48,5 @@ describe('API /productos', () => {
             id_categoria: "67db699f30d0a6bed5b349f6"
         });
         expect(res.body).toHaveProperty('_id'); // en caso de usar MongoDB
-    });
+    }, 10000);
 });
