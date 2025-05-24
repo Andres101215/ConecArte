@@ -7,7 +7,7 @@ const WompiRespuesta = () => {
 
   useEffect(() => {
     if (transactionId) {
-      fetch(`https://conecarte-8olx.onrender.com/pagos/verificar`, {
+      fetch(`https://conecarte-8olx.onrender.com/pagos/pagos/verificar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transactionId }),

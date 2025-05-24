@@ -8,7 +8,7 @@ function PanelUser() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("https://conecarte-8olx.onrender.com/productos")
+    fetch("https://conecarte-8olx.onrender.com/productos/productos")
       .then((res) => {
         if (!res.ok) throw new Error("Error al obtener productos");
         return res.json();
