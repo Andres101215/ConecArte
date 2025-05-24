@@ -11,7 +11,7 @@ app.use(express.json());
 
 // Rutas
 const pagosRoutes = require("./routes/pago");
-app.use("/", pagosRoutes);
+app.use("/pagos", pagosRoutes);
 
 // Iniciar servidor
 app.listen(port, () => {

@@ -22,7 +22,7 @@ const facturasRoutes = require("./routes/facturas");
 
 
 //Usar rutas
-app.use("/", facturasRoutes);
+app.use("/facturas", facturasRoutes);
 
 
 //Ruta principal de prueba

@@ -22,7 +22,7 @@ const carritosRoutes = require("./routes/carritos");
 
 
 //Usar rutas
-app.use("/", carritosRoutes);
+app.use("/carritos", carritosRoutes);
 
 
 //Ruta principal de prueba
