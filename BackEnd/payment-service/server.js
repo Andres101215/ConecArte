@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // Rutas
-const pagosRoutes = require("./routes/pago");
+const pagosRoutes = require("./routes");
 app.use("/", pagosRoutes);
 
 // Iniciar servidor

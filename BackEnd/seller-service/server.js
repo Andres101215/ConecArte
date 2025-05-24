@@ -18,7 +18,7 @@ mongoose.connect(process.env.MONGO_URI, {
 .catch((error) => console.error(" Error conectando a MongoDB:", error));
 
 //Importar rutas
-const vendedoresRoutes = require("./routes/vendedores");
+const vendedoresRoutes = require("./routes");
 
 //Usar rutas
 app.use("/", vendedoresRoutes);
