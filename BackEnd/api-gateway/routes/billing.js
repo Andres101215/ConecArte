@@ -4,7 +4,6 @@ const BILLING_SERVICE_URL = process.env.BILLING_SERVICE_URL;
 module.exports = (app) => {
   app.use('/facturaciones', createProxyMiddleware({
     target: BILLING_SERVICE_URL,
-    changeOrigin: true,
-    pathRewrite: { '^/facturaciones': '' }
+    changeOrigin: true
   }));
 };

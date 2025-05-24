@@ -21,7 +21,7 @@ mongoose.connect(process.env.MONGO_URI, {
 const usuariosRoutes = require("./routes/usuarios");
 
 //Usar rutas
-app.use("/usuarios", usuariosRoutes);
+app.use("/", usuariosRoutes);
 
 //Ruta principal de prueba
 app.get("/", (req, res) => {

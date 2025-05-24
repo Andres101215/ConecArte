@@ -21,7 +21,7 @@ mongoose.connect(process.env.MONGO_URI, {
 const productosRoutes = require("./routes/productos");
 
 //Usar rutas
-app.use("/productos", productosRoutes);
+app.use("/", productosRoutes);
 
 //Ruta principal de prueba
 app.get("/", (req, res) => {

@@ -21,7 +21,7 @@ mongoose.connect(process.env.MONGO_URI, {
 const vendedoresRoutes = require("./routes/vendedores");
 
 //Usar rutas
-app.use("/vendedores", vendedoresRoutes);
+app.use("/", vendedoresRoutes);
 
 
 //Ruta principal de prueba
