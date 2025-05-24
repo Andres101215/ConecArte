@@ -8,10 +8,6 @@ const ProductoEnCarritoSchema = new mongoose.Schema({
     cantidad: {
       type: Number,
       required: true
-    },
-    precio_unitario: {
-      type: Number,
-      required: true
     }
   });
 

@@ -37,6 +37,12 @@ function Navbar() {
 
             {user?.tipo_usuario === "usuario" && (
               <li className="nav-item">
+                <Link className="nav-link" to="/pasarela">Carrito</Link>
+              </li>
+            )}
+
+            {user?.tipo_usuario === "usuario" && (
+              <li className="nav-item">
                 <Link className="nav-link" to="/panelUser">Ver Productos</Link>
               </li>
             )}

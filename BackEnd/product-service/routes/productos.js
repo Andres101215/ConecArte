@@ -64,4 +64,23 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+
+router.post("/detalles", async (req, res) => {
+  try {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      return res.status(400).json({ mensaje: "Debe enviar un array de ids de productos" });
+    }
+
+    const productos = await Producto.find({ _id: { $in: ids } });
+
+    res.status(200).json(productos);
+  } catch (error) {
+    console.error("Error al obtener los productos:", error);
+    res.status(500).json({ mensaje: "Error al obtener productos", error });
+  }
+});
+
+
 module.exports = router;

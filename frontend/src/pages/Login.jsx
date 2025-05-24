@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from '../Contexts/AuthContext';
-import './Login.css'; // 👈 Importa el nuevo CSS
+import './Login.css'; 
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Login() {
@@ -13,7 +13,7 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:5001/usuarios/login', {
+      const response = await fetch('https://conecarte.onrender.com/usuarios/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -27,6 +27,8 @@ export default function Login() {
         login(data.token); // Guarda el token en contexto
         const decoded = jwtDecode(data.token);
         setMensaje('Inicio de sesión exitoso');
+        localStorage.setItem("id_usuario", decoded.id);
+
 
         switch (decoded.tipo_usuario) {
           case "administrador":
