@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const port = process.env.PORT || 5050;
+app.use(cors({ origin: 'http://localhost:3000' }));
 
 // Importar rutas proxy
 require('./routes/user')(app);
