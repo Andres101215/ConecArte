@@ -7,7 +7,7 @@ function Home() {
       <div className="overlay">
         <div className="container text-center py-5">
           <h1 className="alert alert-warning fw-bold">
-            PARA PROBAR LA APLICACIÓN: Desplieguen los servicios de <strong>AUTH SERVICE</strong>, <strong>PRODUCT SERVICE</strong>, <strong>CART SERVICE</strong>. Para registrar usuario es necesario tener el carrito activo.
+          la primera vez se demora si el servicio no esta activo ,en caso de que no cargue avisan para reiniciar el servidor
           </h1>
 
           <h1 className="display-4 fw-bold bandera-texto">
