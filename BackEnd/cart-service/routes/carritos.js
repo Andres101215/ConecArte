@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 
 router.get("/usuario/:id_usuario", async (req, res) => {
   try {
-    const URL_PRODUCTOS = "http://localhost:5000/productos/detalles"; 
+    const URL_PRODUCTOS = "https://conecarte-8olx.onrender.com/productos/detalles"; 
 
     const carrito = await Carrito.findOne({ id_usuario: req.params.id_usuario });
 

@@ -43,7 +43,7 @@ export default function RegisterUser() {
     };
 
     try {
-      const response = await fetch('http://localhost:5001/usuarios', {
+      const response = await fetch('https://conecarte-8olx.onrender.com/usuarios', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

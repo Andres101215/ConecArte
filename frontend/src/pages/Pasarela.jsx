@@ -15,7 +15,7 @@ function CarritoUsuario() {
     if (!confirmar) return;
 
     try {
-      const response = await fetch(`http://localhost:5005/carritos/${id_usuario}/${id_producto}`, {
+      const response = await fetch(`https://conecarte-8olx.onrender.com/carritos/${id_usuario}/${id_producto}`, {
         method: "DELETE",
       });
 
@@ -24,7 +24,7 @@ function CarritoUsuario() {
       }
 
       // Vuelve a consultar el carrito completo
-      const res = await fetch(`http://localhost:5005/carritos/usuario/${id_usuario}`);
+      const res = await fetch(`https://conecarte-8olx.onrender.com/carritos/usuario/${id_usuario}`);
       if (!res.ok) throw new Error("No se pudo obtener el carrito actualizado");
 
       // Recargar el carrito actualizado
@@ -43,7 +43,7 @@ function CarritoUsuario() {
       return;
     }
 
-    fetch(`http://localhost:5005/carritos/usuario/${id_usuario}`)
+    fetch(`https://conecarte-8olx.onrender.com/carritos/usuario/${id_usuario}`)
       .then((res) => {
         if (!res.ok) {
           throw new Error("No se pudo obtener el carrito");
