@@ -5,6 +5,6 @@ module.exports = (app) => {
   app.use('/usuarios', createProxyMiddleware({
     target: USER_SERVICE_URL,
     changeOrigin: true,
-    pathRewrite: { '^/usuarios': '' }
+   // pathRewrite: { '^/usuarios': '' }
   }));
 };
