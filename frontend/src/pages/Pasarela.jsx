@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import WompiPago from "../components/WompiPago";
-import "../ProductosGrid.css";
+import "./panelUser.css";
 
 function CarritoUsuario() {
   const [carrito, setCarrito] = useState(null);

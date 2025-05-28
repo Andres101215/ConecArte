@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import './RegisterUser.css'; // Estilos personalizados
-import registroFondo from '../assets/registro.webp'; // Imagen de fondo
+import './RegisterUser.css';
+import registroFondo from '../assets/registro.webp';
 
 export default function RegisterUser() {
   const [nombre, setNombre] = useState('');
@@ -52,12 +52,9 @@ export default function RegisterUser() {
       });
 
       if (response.ok) {
-        const result = await response.json();
-        console.log('Usuario registrado con éxito:', result);
         alert('Registro exitoso');
       } else {
         const errorData = await response.json();
-        console.error('Error al registrar usuario');
         if (errorData?.mensaje?.includes('El nombre de usuario ya existe')) {
           setUsernameError(true);
         } else {
@@ -65,7 +62,6 @@ export default function RegisterUser() {
         }
       }
     } catch (error) {
-      console.error('Error en la solicitud:', error);
       alert('No se pudo conectar al servidor');
     }
 
@@ -78,104 +74,92 @@ export default function RegisterUser() {
       style={{ backgroundImage: `url(${registroFondo})` }}
     >
       <div className="overlay">
-        <div className="container form-container p-4">
-        <h2
-          className="mb-4 text-blue text-center"
-          style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}
-        >
-          Registro Usuario
-        </h2>          <form
-            onSubmit={handleSubmit}
-            className={`needs-validation ${validated ? 'was-validated' : ''}`}
-            noValidate
-          >
-            <div className="mb-3">
-              <input type="text" className="form-control" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
-              <div className="invalid-feedback">Por favor ingrese su nombre.</div>
-            </div>
-
-            <div className="mb-3">
-              <input type="text" className="form-control" placeholder="Apellido" value={apellido} onChange={(e) => setApellido(e.target.value)} required />
-              <div className="invalid-feedback">Por favor ingrese su apellido.</div>
-            </div>
-
-            <div className="mb-3">
-              <input type="email" className="form-control" placeholder="Correo" value={correo} onChange={(e) => setCorreo(e.target.value)} required />
-              <div className="invalid-feedback">Por favor ingrese su correo electrónico.</div>
-            </div>
-
-            <div className="mb-3">
-              <input type="password" className="form-control" placeholder="Contraseña" value={contraseña} onChange={(e) => setContraseña(e.target.value)} required />
-              <div className="invalid-feedback">Por favor ingrese su contraseña.</div>
-            </div>
-
-            <div className="mb-3">
-              <input type="text" className={`form-control ${usernameError ? 'is-invalid' : ''}`} placeholder="Username" value={username} onChange={(e) => { setUsername(e.target.value); setUsernameError(false); }} required />
-              <div className="invalid-feedback">
-                {usernameError ? 'El nombre de usuario ya está en uso' : 'Por favor ingrese su nombre de usuario.'}
+        <div className="form-wrapper">
+          <div className="form-container">
+            <h2 className="mb-4 text-blue text-center" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
+              Registro Usuario
+            </h2>
+            <form
+              onSubmit={handleSubmit}
+              className={`needs-validation ${validated ? 'was-validated' : ''}`}
+              noValidate
+            >
+              <div className="row">
+                <div className="col-md-6 mb-3">
+                  <input type="text" className="form-control" placeholder="Nombre" value={nombre} onChange={(e) => setNombre(e.target.value)} required />
+                  <div className="invalid-feedback">Por favor ingrese su nombre.</div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <input type="text" className="form-control" placeholder="Apellido" value={apellido} onChange={(e) => setApellido(e.target.value)} required />
+                  <div className="invalid-feedback">Por favor ingrese su apellido.</div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <input type="email" className="form-control" placeholder="Correo" value={correo} onChange={(e) => setCorreo(e.target.value)} required />
+                  <div className="invalid-feedback">Por favor ingrese su correo electrónico.</div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <input type="password" className="form-control" placeholder="Contraseña" value={contraseña} onChange={(e) => setContraseña(e.target.value)} required />
+                  <div className="invalid-feedback">Por favor ingrese su contraseña.</div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <input type="text" className={`form-control ${usernameError ? 'is-invalid' : ''}`} placeholder="Username" value={username} onChange={(e) => { setUsername(e.target.value); setUsernameError(false); }} required />
+                  <div className="invalid-feedback">
+                    {usernameError ? 'El nombre de usuario ya está en uso' : 'Por favor ingrese su nombre de usuario.'}
+                  </div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <input type="date" className="form-control" value={fechaNacimiento} onChange={(e) => setFechaNacimiento(e.target.value)} required />
+                  <div className="invalid-feedback">Por favor ingrese su fecha de nacimiento.</div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <input type="text" className="form-control" placeholder="Departamento" value={departamento} onChange={(e) => setDepartamento(e.target.value)} required />
+                  <div className="invalid-feedback">Por favor ingrese su departamento.</div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <input type="text" className="form-control" placeholder="Ciudad" value={ciudad} onChange={(e) => setCiudad(e.target.value)} required />
+                  <div className="invalid-feedback">Por favor ingrese su ciudad.</div>
+                </div>
+                <div className="col-12 mb-3">
+                  <input type="text" className="form-control" placeholder="Dirección" value={direccion} onChange={(e) => setDireccion(e.target.value)} required />
+                  <div className="invalid-feedback">Por favor ingrese su dirección.</div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <select className="form-select" value={genero} onChange={(e) => setGenero(e.target.value)} required>
+                    <option value="">Selecciona Género</option>
+                    <option value="M">Masculino</option>
+                    <option value="F">Femenino</option>
+                    <option value="Otro">Otro</option>
+                  </select>
+                  <div className="invalid-feedback">Por favor seleccione su género.</div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <select className="form-select" value={tipoDocumento} onChange={(e) => setTipoDocumento(e.target.value)} required>
+                    <option value="">Selecciona Tipo Documento</option>
+                    <option value="T.I">T.I</option>
+                    <option value="C.C">C.C</option>
+                    <option value="Pasaporte">Pasaporte</option>
+                  </select>
+                  <div className="invalid-feedback">Por favor seleccione su tipo de documento.</div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <input type="number" className="form-control" placeholder="Documento" value={documento} onChange={(e) => setDocumento(e.target.value)} required />
+                  <div className="invalid-feedback">Por favor ingrese su número de documento.</div>
+                </div>
+                <div className="col-md-6 mb-3">
+                  <input type="number" className="form-control" placeholder="Celular" value={celular} onChange={(e) => setCelular(e.target.value)} required />
+                  <div className="invalid-feedback">Por favor ingrese su número de celular.</div>
+                </div>
+                <div className="col-12 mb-4">
+                  <select className="form-select" value={tipoUsuario} onChange={(e) => setTipoUsuario(e.target.value)} required>
+                    <option value="usuario">Usuario</option>
+                    <option value="vendedor">Vendedor</option>
+                  </select>
+                  <div className="invalid-feedback">Por favor seleccione el tipo de usuario.</div>
+                </div>
               </div>
-            </div>
-
-            <div className="mb-3">
-              <input type="date" className="form-control" value={fechaNacimiento} onChange={(e) => setFechaNacimiento(e.target.value)} required />
-              <div className="invalid-feedback">Por favor ingrese su fecha de nacimiento.</div>
-            </div>
-
-            <div className="mb-3">
-              <input type="text" className="form-control" placeholder="Departamento" value={departamento} onChange={(e) => setDepartamento(e.target.value)} required />
-              <div className="invalid-feedback">Por favor ingrese su departamento.</div>
-            </div>
-
-            <div className="mb-3">
-              <input type="text" className="form-control" placeholder="Ciudad" value={ciudad} onChange={(e) => setCiudad(e.target.value)} required />
-              <div className="invalid-feedback">Por favor ingrese su ciudad.</div>
-            </div>
-
-            <div className="mb-3">
-              <input type="text" className="form-control" placeholder="Dirección" value={direccion} onChange={(e) => setDireccion(e.target.value)} required />
-              <div className="invalid-feedback">Por favor ingrese su dirección.</div>
-            </div>
-
-            <div className="mb-3">
-              <select className="form-select" value={genero} onChange={(e) => setGenero(e.target.value)} required>
-                <option value="">Selecciona Género</option>
-                <option value="M">Masculino</option>
-                <option value="F">Femenino</option>
-                <option value="Otro">Otro</option>
-              </select>
-              <div className="invalid-feedback">Por favor seleccione su género.</div>
-            </div>
-
-            <div className="mb-3">
-              <select className="form-select" value={tipoDocumento} onChange={(e) => setTipoDocumento(e.target.value)} required>
-                <option value="">Selecciona Tipo Documento</option>
-                <option value="T.I">T.I</option>
-                <option value="C.C">C.C</option>
-                <option value="Pasaporte">Pasaporte</option>
-              </select>
-              <div className="invalid-feedback">Por favor seleccione su tipo de documento.</div>
-            </div>
-
-            <div className="mb-3">
-              <input type="number" className="form-control" placeholder="Documento" value={documento} onChange={(e) => setDocumento(e.target.value)} required />
-              <div className="invalid-feedback">Por favor ingrese su número de documento.</div>
-            </div>
-
-            <div className="mb-3">
-              <input type="number" className="form-control" placeholder="Celular" value={celular} onChange={(e) => setCelular(e.target.value)} required />
-              <div className="invalid-feedback">Por favor ingrese su número de celular.</div>
-            </div>
-
-            <div className="mb-3">
-              <select className="form-select" value={tipoUsuario} onChange={(e) => setTipoUsuario(e.target.value)} required>
-                <option value="usuario">Usuario</option>
-                <option value="vendedor">Vendedor</option>
-              </select>
-              <div className="invalid-feedback">Por favor seleccione el tipo de usuario.</div>
-            </div>
-
-            <button type="submit" className="btn btn-primary w-100">Registrarse</button>
-          </form>
+              <button type="submit" className="btn btn-primary w-100">Registrarse</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
