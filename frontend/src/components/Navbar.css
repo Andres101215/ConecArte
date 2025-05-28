@@ -67,4 +67,20 @@ html, body {
 .navbar .btn-outline-warning {
   border-radius: 20px;
   padding: 5px 15px;
+}/* Asegura que los items estén alineados verticalmente */
+.navbar .nav-item,
+.navbar .btn-outline-warning {
+  display: flex;
+  align-items: center;
+  height: 70px;
 }
+
+/* Mejora visual del botón */
+.navbar .btn-outline-warning {
+  border-radius: 20px;
+  padding: 8px 20px;
+  margin-top: auto;
+  margin-bottom: auto;
+  line-height: normal;
+}
+

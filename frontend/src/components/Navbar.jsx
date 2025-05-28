@@ -16,8 +16,19 @@ function Navbar() {
       <div className="container">
         <Link className="navbar-brand fw-bold text-warning" to="/">ConectArte</Link>
 
-        <div className="collapse navbar-collapse">
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
+
+        <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav ms-auto">
+
+            {/* No autenticado */}
             {!user && (
               <>
                 <li className="nav-item">
@@ -26,10 +37,10 @@ function Navbar() {
                 <li className="nav-item">
                   <Link className="nav-link" to="/register-user">Registro Usuario</Link>
                 </li>
-                
               </>
             )}
 
+            {/* Usuario vendedor */}
             {user?.tipo_usuario === "vendedor" && (
               <>
                 <li className="nav-item">
@@ -38,34 +49,40 @@ function Navbar() {
                 <li className="nav-item">
                   <Link className="nav-link" to="/movimientos">Movimientos</Link>
                 </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/panelSeller">Ver Productos</Link>
+                </li>
               </>
             )}
 
-            {user?.tipo_usuario === "usuario" && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/pasarela">Carrito</Link>
-              </li>
-            )}
-
+            {/* Usuario normal */}
             {user?.tipo_usuario === "usuario" && (
               <li className="nav-item">
                 <Link className="nav-link" to="/panelUser">Ver Productos</Link>
               </li>
             )}
-            {user && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/perfil">Perfil</Link>
-              </li>
-            )}
 
             {user && (
-              <li className="nav-item">
+              user.email === "andres@admin.com" ? (
+                <li className="nav-item">
+                  <Link className="nav-link" to="/panelAdmin">Editar</Link>
+                </li>
+              ) : (
+                <li className="nav-item">
+                </li>
+              )
+            )}
+
+
+            {/* Todos los logueados pueden cerrar sesión */}
+            {user && (
+              <li className="nav-item d-flex align-items-center">
                 <button className="btn btn-outline-warning ms-3" onClick={handleLogout}>
                   Cerrar Sesión
                 </button>
               </li>
             )}
-
+            
           </ul>
         </div>
       </div>

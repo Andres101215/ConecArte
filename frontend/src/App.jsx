@@ -16,8 +16,8 @@ import MisTiendas from "./pages/MisTiendas"; // Ajusta si tu carpeta es distinta
 import Movimientos from './pages/Movimientos';
 import VendedorAdmin from './pages/VendedorAdmin';
 import UsuariosAdmin from './pages/UsuariosAdmin';
-import TiendasAdmin from './pages/TiendasAdmin';
 import ProductosAdmin from './pages/ProductosAdmin';
+
 
 
 
@@ -50,7 +50,6 @@ function App() {
           <Route path="/movimientos" element={<Movimientos />} />
           <Route path="/admin-vendedores" element={<VendedorAdmin />} />
           <Route path="/admin-usuarios" element={<UsuariosAdmin />} />
-          <Route path="/admin-tiendas" element={<TiendasAdmin />} />
           <Route path="/admin-productos" element={<ProductosAdmin />} />
 
         </Routes>

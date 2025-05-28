@@ -34,7 +34,22 @@
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.7);
   }
 
-  .bandera-texto {
-  font-size: 300px; /* Tamaño grande (1rem = 16px, 4rem = 64px) */
+.bandera-texto {
+  font-size: 10vw !important;
   text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+  font-weight: 900;
+  line-height: 1.1;
 }
+
+@media (min-width: 1600px) {
+  .bandera-texto {
+    font-size: 70px !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .bandera-texto {
+    font-size: 8vw !important;
+  }
+}
+

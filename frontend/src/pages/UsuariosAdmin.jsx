@@ -1,21 +1,56 @@
-import React, { useEffect, useState } from "react";
-import { Modal, Button, Form, Table } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useState } from 'react';
+import { Modal, Button, Form, Table } from 'react-bootstrap';
+import './FormAdmin.css';
 
 function UsuariosAdmin() {
-  const [usuarios, setUsuarios] = useState([]);
+  const [usuarios, setUsuarios] = useState([
+    {
+      _id: '1',
+      nombre: 'Andrés',
+      apellido: 'Admin',
+      correo: 'andres@admin.com',
+      username: 'admin_andres',
+      tipo_usuario: 'admin',
+      contraseña: '',
+      fecha_nacimiento: '',
+      departamento: '',
+      ciudad: '',
+      direccion: '',
+      genero: '',
+      tipo_documento: '',
+      documento: '',
+      celular: '',
+      fecha_creacion: new Date().toISOString().split('T')[0],
+    },
+  ]);
+
   const [showEditModal, setShowEditModal] = useState(false);
   const [usuarioEditado, setUsuarioEditado] = useState(null);
 
-  useEffect(() => {
-    fetch("https://conecarte-8olx.onrender.com/usuarios")
-      .then(res => res.json())
-      .then(data => setUsuarios(data))
-      .catch(err => console.error(err));
-  }, []);
-
   const abrirModalEdicion = (usuario) => {
-    setUsuarioEditado(usuario);
+    setUsuarioEditado({ ...usuario });
+    setShowEditModal(true);
+  };
+
+  const abrirModalNuevo = () => {
+    setUsuarioEditado({
+      _id: Date.now().toString(),
+      nombre: '',
+      apellido: '',
+      correo: '',
+      contraseña: '',
+      tipo_usuario: 'usuario',
+      username: '',
+      fecha_nacimiento: '',
+      departamento: '',
+      ciudad: '',
+      direccion: '',
+      genero: '',
+      tipo_documento: '',
+      documento: '',
+      celular: '',
+      fecha_creacion: new Date().toISOString().split('T')[0],
+    });
     setShowEditModal(true);
   };
 
@@ -27,112 +62,108 @@ function UsuariosAdmin() {
   };
 
   const guardarCambios = () => {
-    fetch(`https://conecarte-8olx.onrender.com/usuarios/${usuarioEditado._id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(usuarioEditado),
-    })
-      .then(res => res.json())
-      .then(() => {
-        setUsuarios(prev =>
-          prev.map(u => (u._id === usuarioEditado._id ? usuarioEditado : u))
-        );
-        setShowEditModal(false);
-      });
+    setUsuarios((prev) => {
+      const existe = prev.find((u) => u._id === usuarioEditado._id);
+      if (existe) {
+        return prev.map((u) => (u._id === usuarioEditado._id ? usuarioEditado : u));
+      } else {
+        return [...prev, usuarioEditado];
+      }
+    });
+    setShowEditModal(false);
+  };
+
+  const eliminarUsuario = (id) => {
+    if (window.confirm('¿Estás seguro de eliminar este usuario?')) {
+      setUsuarios((prev) => prev.filter((u) => u._id !== id));
+    }
   };
 
   return (
-    <div className="usuarios-admin-container">
-      <div className="overlay-usuarios">
-        <div className="container p-4 bg-dark text-white rounded shadow-lg">
-          <h2 className="mb-4">Gestión de Usuarios</h2>
-          <Table striped bordered hover variant="dark" responsive>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Correo</th>
-                <th>Username</th>
-                <th>Tipo</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {usuarios.map((u) => (
-                <tr key={u._id}>
-                  <td>{u.nombre} {u.apellido}</td>
-                  <td>{u.correo}</td>
-                  <td>{u.username}</td>
-                  <td>{u.tipo_usuario}</td>
-                  <td>
-                    <Button variant="warning" onClick={() => abrirModalEdicion(u)}>
-                      Editar
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
+    <div className="admin-overlay">
+      <div className="container admin-card">
+        <div className="d-flex justify-content-between align-items-center mb-3">
+          <h2 className="admin-title">Gestión de Usuarios</h2>
+          <Button variant="success" onClick={abrirModalNuevo}>+ Agregar Usuario</Button>
         </div>
+
+        <Table className="admin-table" striped bordered hover variant="dark" responsive>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Correo</th>
+              <th>Username</th>
+              <th>Tipo</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            {usuarios.map((u) => (
+              <tr key={u._id}>
+                <td>{u.nombre} {u.apellido}</td>
+                <td>{u.correo}</td>
+                <td>{u.username}</td>
+                <td>{u.tipo_usuario}</td>
+                <td>
+                  <Button size="sm" variant="warning" className="me-2" onClick={() => abrirModalEdicion(u)}>Editar</Button>
+                  <Button size="sm" variant="danger" onClick={() => eliminarUsuario(u._id)}>Eliminar</Button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
       </div>
 
-      {/* Modal de Edición */}
-      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered>
+      <Modal show={showEditModal} onHide={() => setShowEditModal(false)} centered size="lg">
         <Modal.Header closeButton>
-          <Modal.Title>Editar Usuario</Modal.Title>
+          <Modal.Title>{usuarioEditado?.nombre ? 'Editar Usuario' : 'Agregar Usuario'}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {usuarioEditado && (
-            <Form>
-              <Form.Group>
-                <Form.Label>Nombre</Form.Label>
+          <Form>
+            {[
+              ['nombre', 'Nombre'],
+              ['apellido', 'Apellido'],
+              ['correo', 'Correo'],
+              ['contraseña', 'Contraseña'],
+              ['username', 'Username'],
+              ['fecha_nacimiento', 'Fecha de Nacimiento', 'date'],
+              ['departamento', 'Departamento'],
+              ['ciudad', 'Ciudad'],
+              ['direccion', 'Dirección'],
+              ['genero', 'Género'],
+              ['tipo_documento', 'Tipo de Documento'],
+              ['documento', 'Número de Documento'],
+              ['celular', 'Celular'],
+              ['fecha_creacion', 'Fecha de Creación', 'date'],
+            ].map(([name, label, type = 'text']) => (
+              <Form.Group key={name} className="mb-2">
+                <Form.Label>{label}</Form.Label>
                 <Form.Control
-                  type="text"
-                  name="nombre"
-                  value={usuarioEditado.nombre}
+                  type={type}
+                  name={name}
+                  value={usuarioEditado?.[name] || ''}
                   onChange={handleChange}
                 />
               </Form.Group>
-              <Form.Group>
-                <Form.Label>Apellido</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="apellido"
-                  value={usuarioEditado.apellido}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Correo</Form.Label>
-                <Form.Control
-                  type="email"
-                  name="correo"
-                  value={usuarioEditado.correo}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Form.Group>
-                <Form.Label>Tipo de Usuario</Form.Label>
-                <Form.Control
-                  as="select"
-                  name="tipo_usuario"
-                  value={usuarioEditado.tipo_usuario}
-                  onChange={handleChange}
-                >
-                  <option value="usuario">Usuario</option>
-                  <option value="vendedor">Vendedor</option>
-                  <option value="admin">Administrador</option>
-                </Form.Control>
-              </Form.Group>
-            </Form>
-          )}
+            ))}
+            <Form.Group className="mb-2">
+              <Form.Label>Tipo de Usuario</Form.Label>
+              <Form.Control
+                as="select"
+                name="tipo_usuario"
+                value={usuarioEditado?.tipo_usuario}
+                onChange={handleChange}
+              >
+                <option value="usuario">Usuario</option>
+                <option value="vendedor">Vendedor</option>
+                <option value="admin">Administrador</option>
+              </Form.Control>
+            </Form.Group>
+          </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowEditModal(false)}>
-            Cancelar
-          </Button>
-          <Button variant="primary" onClick={guardarCambios}>
-            Guardar Cambios
-          </Button>
+          <Button variant="secondary" onClick={() => setShowEditModal(false)}>Cancelar</Button>
+          <Button variant="primary" onClick={guardarCambios}>Guardar</Button>
         </Modal.Footer>
       </Modal>
     </div>

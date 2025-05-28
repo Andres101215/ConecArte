@@ -1,38 +1,65 @@
 .perfil-container {
   position: relative;
-  height: 100vh;
-  background-image: url('../assets/user.webp'); /* Imagen de fondo personalizada */
+  min-height: 100vh;
+  background-image: url('../assets/pendiente1.webp');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-  background-repeat: no-repeat;
-  opacity: 0.98;
+  padding-top: 70px;
 }
 
-
 .overlay {
-  background-color: rgba(110, 110, 110, 0.85);
-  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  min-height: 100vh;
+  padding: 40px 20px;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 2rem;
 }
 
 .perfil-card {
-  background-color: rgba(0, 0, 0, 0.6);
-  border: none;
+  width: 100%;
+  max-width: 900px;
+  background-color: rgba(59, 59, 59, 0.85); /* Más opaco */
+  color: white;
   padding: 2rem;
   border-radius: 1rem;
-  width: 100%;
-  max-width: 400px;
+  border: none;
 }
 
-.bandera-texto {
-  font-size: 14px;
-  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+.perfil-card h4 {
+  text-shadow: 2px 2px 8px black;
+  margin-bottom: 1.5rem;
 }
 
-.text-white {
-  color: white;
+.bandera-textoo {
+  font-size: 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem 2rem;
+  text-shadow: 1px 1px 4px black;
+}
+
+.bandera-textoo p {
+  margin: 0;
+}
+
+/* Botón flotante */
+.buzon-float-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffc107;
+  color: #000;
+  border: none;
+  border-radius: 50%;
+  padding: 14px 18px;
+  font-size: 20px;
+  z-index: 9999;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease;
+}
+
+.buzon-float-button:hover {
+  transform: scale(1.1);
 }
