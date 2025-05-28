@@ -1,0 +1,11 @@
+.admin-container {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  position: relative;
+}
+
+.overlay {
+  min-height: 100vh;
+  background-color: rgba(0, 0, 0, 0.7); /* oscurece el fondo */
+}

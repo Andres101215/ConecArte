@@ -11,6 +11,18 @@ import PanelSeller from './pages/panelSeller';
 import WompiRespuesta from './pages/wompi-respuesta';
 import ProductoDetalle from './pages/ProductoDetalle';
 import Navbar from './components/Navbar';
+import Perfil from './pages/Perfil';
+import MisTiendas from "./pages/MisTiendas"; // Ajusta si tu carpeta es distinta
+import Movimientos from './pages/Movimientos';
+import VendedorAdmin from './pages/VendedorAdmin';
+import UsuariosAdmin from './pages/UsuariosAdmin';
+import TiendasAdmin from './pages/TiendasAdmin';
+import ProductosAdmin from './pages/ProductosAdmin';
+
+
+
+
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
@@ -33,6 +45,14 @@ function App() {
           <Route path="/panelUser" element={<PanelUser />} />
           <Route path="/panelSeller" element={<PanelSeller />} />
           <Route path="/producto/:id" element={<ProductoDetalle />} />
+          <Route path="/perfil" element={<Perfil />} />
+          <Route path="/mistiendas" element={<MisTiendas />} />
+          <Route path="/movimientos" element={<Movimientos />} />
+          <Route path="/admin-vendedores" element={<VendedorAdmin />} />
+          <Route path="/admin-usuarios" element={<UsuariosAdmin />} />
+          <Route path="/admin-tiendas" element={<TiendasAdmin />} />
+          <Route path="/admin-productos" element={<ProductosAdmin />} />
+
         </Routes>
       </Router>
     </AuthProvider>

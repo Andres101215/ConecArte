@@ -26,13 +26,19 @@ function Navbar() {
                 <li className="nav-item">
                   <Link className="nav-link" to="/register-user">Registro Usuario</Link>
                 </li>
+                
               </>
             )}
 
             {user?.tipo_usuario === "vendedor" && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/register-seller">Registrar Tienda</Link>
-              </li>
+              <>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/register-seller">Registrar Tienda</Link>
+                </li>
+                <li className="nav-item">
+                  <Link className="nav-link" to="/movimientos">Movimientos</Link>
+                </li>
+              </>
             )}
 
             {user?.tipo_usuario === "usuario" && (
@@ -46,6 +52,11 @@ function Navbar() {
                 <Link className="nav-link" to="/panelUser">Ver Productos</Link>
               </li>
             )}
+            {user && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/perfil">Perfil</Link>
+              </li>
+            )}
 
             {user && (
               <li className="nav-item">
@@ -54,6 +65,7 @@ function Navbar() {
                 </button>
               </li>
             )}
+
           </ul>
         </div>
       </div>

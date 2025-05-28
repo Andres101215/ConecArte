@@ -1,0 +1,21 @@
+.mis-tiendas-background {
+  background: url('../assets/user.webp') no-repeat center center fixed;
+  background-size: cover;
+  min-height: 100vh;
+  position: relative;
+}
+
+.overlay {
+  background-color: rgba(110, 110, 110, 0.85); /* mejora el contraste del texto */
+  height: 100%;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.tienda-contenedor {
+  max-width: 800px;
+  width: 100%;
+}

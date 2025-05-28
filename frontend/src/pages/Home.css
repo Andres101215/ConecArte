@@ -35,7 +35,6 @@
   }
 
   .bandera-texto {
-    font-size: 10.5px; /* Aumenta el tamaño */
-    text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5); /* Sombra negra suave */
-  }
-  
+  font-size: 300px; /* Tamaño grande (1rem = 16px, 4rem = 64px) */
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}

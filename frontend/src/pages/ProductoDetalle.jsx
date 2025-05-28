@@ -1,13 +1,16 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { FaUserCircle } from 'react-icons/fa';
+import './ProductoDetalle.css';
 
 export default function ProductoDetalle() {
-  const { id } = useParams(); // ID del producto
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [producto, setProducto] = useState(null);
   const [mensaje, setMensaje] = useState("");
   const [cantidad, setCantidad] = useState(1);
 
-  const id_usuario = localStorage.getItem("id_usuario"); // Asegúrate de que esté guardado
+  const id_usuario = localStorage.getItem("id_usuario");
 
   useEffect(() => {
     fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`)
@@ -49,36 +52,48 @@ export default function ProductoDetalle() {
     }
   };
 
-  if (!producto) return <p>Cargando...</p>;
+  if (!producto) return <div className="text-center mt-5"><div className="spinner-border text-primary" /></div>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>{producto.nombre}</h2>
-      <p>{producto.descripcion}</p>
-      <p>Ubicación: {producto.ubicacion}</p>
-      <p>Disponibles: {producto.cantidad} unidades</p>
+    <div className="container producto-detalle-container">
+      <div className="card shadow-lg">
+        <div className="card-body">
+          <h2 className="card-title text-primary mb-3">{producto.nombre}</h2>
+          <p className="card-text">{producto.descripcion}</p>
+          <p><strong>Ubicación:</strong> {producto.ubicacion}</p>
+          <p><strong>Disponibles:</strong> {producto.cantidad} unidades</p>
 
-      <label>
-        Cantidad:
-        <input
-          type="number"
-          min="1"
-          max={producto.cantidad}
-          value={cantidad}
-          onChange={(e) => setCantidad(e.target.value)}
-          style={{ marginLeft: "10px", width: "60px" }}
-        />
-      </label>
+          <div className="mb-3">
+            <label className="form-label"><strong>Cantidad:</strong></label>
+            <input
+              type="number"
+              min="1"
+              max={producto.cantidad}
+              value={cantidad}
+              onChange={(e) => setCantidad(e.target.value)}
+              className="form-control cantidad-input"
+              style={{ maxWidth: "100px" }}
+            />
+          </div>
 
-      <br /><br />
-      
-      <h3>Precio: ${producto.precio}</h3>
+          <h4 className="text-success"><strong>Precio:</strong> ${producto.precio}</h4>
 
-      <button className="btn btn-primary" onClick={añadirAlCarrito}>
-        Añadir al Carrito
+          <button className="btn btn-primary mt-3" onClick={añadirAlCarrito}>
+            Añadir al Carrito
+          </button>
+
+          {mensaje && <div className="alert alert-info mt-3">{mensaje}</div>}
+        </div>
+      </div>
+
+      {/* Botón flotante de perfil */}
+      <button
+        className="btn btn-secondary perfil-float-button"
+        onClick={() => navigate("/perfil")}
+        title="Ir al perfil"
+      >
+        <FaUserCircle size={24} />
       </button>
-
-      {mensaje && <p>{mensaje}</p>}
     </div>
   );
 }

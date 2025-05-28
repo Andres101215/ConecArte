@@ -1,0 +1,38 @@
+.perfil-container {
+  position: relative;
+  height: 100vh;
+  background-image: url('../assets/user.webp'); /* Imagen de fondo personalizada */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  opacity: 0.98;
+}
+
+
+.overlay {
+  background-color: rgba(110, 110, 110, 0.85);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.perfil-card {
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  padding: 2rem;
+  border-radius: 1rem;
+  width: 100%;
+  max-width: 400px;
+}
+
+.bandera-texto {
+  font-size: 14px;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.text-white {
+  color: white;
+}
