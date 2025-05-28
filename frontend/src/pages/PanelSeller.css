@@ -4,6 +4,7 @@
   position: relative;
   min-height: 100vh;
   padding: 20px;
+  margin-top: 50px; /* Ajusta esta cantidad según la altura del navbar */
 }
 
 .panel-seller-overlay::before {

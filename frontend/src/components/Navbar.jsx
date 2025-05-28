@@ -62,17 +62,19 @@ function Navbar() {
               </li>
             )}
 
-            {user && (
-              user.email === "andres@admin.com" ? (
-                <li className="nav-item">
-                  <Link className="nav-link" to="/panelAdmin">Editar</Link>
-                </li>
-              ) : (
-                <li className="nav-item">
-                </li>
-              )
+            {/* Mostrar "Perfil" si NO es admin */}
+            {user && user.email !== "andres@admin.com" && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/perfil">Perfil</Link>
+              </li>
             )}
 
+            {/* Usuario administrador */}
+            {user && user.email === "andres@admin.com" && (
+              <li className="nav-item">
+                <Link className="nav-link" to="/panelAdmin">Editar</Link>
+              </li>
+            )}
 
             {/* Todos los logueados pueden cerrar sesión */}
             {user && (
@@ -82,7 +84,7 @@ function Navbar() {
                 </button>
               </li>
             )}
-            
+
           </ul>
         </div>
       </div>
