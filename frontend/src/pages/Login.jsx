@@ -3,6 +3,9 @@ import { jwtDecode } from "jwt-decode";
 import { useAuth } from '../Contexts/AuthContext';
 import './Login.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { useNavigate } from 'react-router-dom';
+
+const navigate = useNavigate();
 
 export default function Login() {
   const { login } = useAuth();
@@ -32,16 +35,16 @@ export default function Login() {
 
         switch (decoded.tipo_usuario) {
           case "administrador":
-            window.location.href = "/panelAdmin";
+            navigate("/panelAdmin");
             break;
           case "usuario":
-            window.location.href = "/panelUser";
+            navigate("/panelUser");
             break;
           case "vendedor":
-            window.location.href = "/panelSeller";
+            navigate("/panelSeller");
             break;
           default:
-            window.location.href = "/";
+            navigate("/");
             break;
         }
 
