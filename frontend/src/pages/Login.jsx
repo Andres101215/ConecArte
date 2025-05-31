@@ -5,10 +5,11 @@ import './Login.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from 'react-router-dom';
 
-const navigate = useNavigate();
+
 
 export default function Login() {
   const { login } = useAuth();
+  const navigate = useNavigate();
   const [correo, setCorreo] = useState('');
   const [contraseña, setContraseña] = useState('');
   const [mensaje, setMensaje] = useState('');
