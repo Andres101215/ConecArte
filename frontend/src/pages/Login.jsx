@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { jwtDecode } from "jwt-decode";
 import { useAuth } from '../Contexts/AuthContext';
-import './Login.css'; 
+import './Login.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Login() {
@@ -78,7 +78,8 @@ export default function Login() {
             required
           />
 
-          <button type="submit" className="btn btn-primary w-100">Entrar</button>
+          <button type="submit" className="btn btn-primary w-100" id="btn-login"
+            data-testid="btn-login">Entrar</button>
 
           {mensaje && <p className="text-danger mt-3 text-center">{mensaje}</p>}
         </form>
