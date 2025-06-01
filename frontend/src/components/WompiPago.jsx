@@ -31,7 +31,7 @@ const WompiPago = ({ pasarelaDePago }) => {
       script.setAttribute("data-amount-in-cents", amountInCents);
       script.setAttribute("data-reference", reference);
       script.setAttribute("data-signature:integrity", signature);
-      script.setAttribute("data-redirect-url", "http://localhost:3000/wompi-respuesta");
+      script.setAttribute("data-redirect-url", "https://conecarte-v7d3.onrender.com/wompi-respuesta");
 
       widgetContainer.current.appendChild(script);
     };

@@ -5,17 +5,17 @@ const router = express.Router();
 
 // Obtener todos los carritos (GET)
 router.get("/", async (req, res) => {
-    try {
-        const carritos = await Carrito.find();
-        res.json(carritos);
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al obtener los carritos", error });
-    }
+  try {
+    const carritos = await Carrito.find();
+    res.json(carritos);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al obtener los carritos", error });
+  }
 });
 
 router.get("/usuario/:id_usuario", async (req, res) => {
   try {
-    const URL_PRODUCTOS = "https://conecarte-8olx.onrender.com/productos/productos/detalles"; 
+    const URL_PRODUCTOS = "https://conecarte-8olx.onrender.com/productos/productos/detalles";
 
     const carrito = await Carrito.findOne({ id_usuario: req.params.id_usuario });
 
@@ -46,7 +46,7 @@ router.get("/usuario/:id_usuario", async (req, res) => {
       ...carrito.toObject(),
       productosCom: productos
     };
-     console.log(carritoConDetalles)
+    console.log(carritoConDetalles)
 
     res.status(200).json(carritoConDetalles);
 
@@ -75,8 +75,9 @@ router.post("/agregar", async (req, res) => {
       });
     } else {
       // Verifica si el producto ya existe en el carrito
-      const productoExistente = carrito.productos.find(p => p.id_producto === id_producto);
-
+      const productoExistente = carrito.productos.find(
+        p => p.id_producto.toString() === id_producto.toString()
+      );
       if (productoExistente) {
         // Si ya existe, solo aumentar la cantidad
         productoExistente.cantidad += cantidad;
@@ -98,53 +99,53 @@ router.post("/agregar", async (req, res) => {
 
 //Obtener un carrito por ID (GET)
 router.get("/:id", async (req, res) => {
-    try {
-        const carrito = await Carrito.findById(req.params.id);
-        if (!carrito) {
-            return res.status(404).json({ mensaje: "carrito no encontrado" });
-        }
-        res.json(carrito);
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al obtener el carrito", error });
+  try {
+    const carrito = await Carrito.findById(req.params.id);
+    if (!carrito) {
+      return res.status(404).json({ mensaje: "carrito no encontrado" });
     }
+    res.json(carrito);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al obtener el carrito", error });
+  }
 });
 
 // Crear un nuevo carrito (POST)
 router.post("/", async (req, res) => {
-    try {
-        const nuevoCarrito = new Carrito(req.body);
-        await nuevoCarrito.save();
-        res.status(201).json(nuevoCarrito);
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al crear el carrito", error });
-    }
+  try {
+    const nuevoCarrito = new Carrito(req.body);
+    await nuevoCarrito.save();
+    res.status(201).json(nuevoCarrito);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al crear el carrito", error });
+  }
 });
 
 //Actualizar un carrito por ID (PUT)
 router.put("/:id", async (req, res) => {
-    try {
-        const carritoActualizado = await Carrito.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        
-        if (!carritoActualizado) {
-            return res.status(404).json({ mensaje: "Carrito no encontrado" });
-        }
-        res.json(carritoActualizado);
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al actualizar el carrito", error });
+  try {
+    const carritoActualizado = await Carrito.findByIdAndUpdate(req.params.id, req.body, { new: true });
+
+    if (!carritoActualizado) {
+      return res.status(404).json({ mensaje: "Carrito no encontrado" });
     }
+    res.json(carritoActualizado);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al actualizar el carrito", error });
+  }
 });
 
 // Eliminar un carrito por ID (DELETE)
 router.delete("/:id", async (req, res) => {
-    try {
-        const carritoEliminado = await Carrito.findByIdAndDelete(req.params.id);
-        if (!carritoEliminado) {
-            return res.status(404).json({ mensaje: "Carrito no encontrado" });
-        }
-        res.json({ mensaje: "Carrito eliminado" });
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al eliminar el carrito", error });
+  try {
+    const carritoEliminado = await Carrito.findByIdAndDelete(req.params.id);
+    if (!carritoEliminado) {
+      return res.status(404).json({ mensaje: "Carrito no encontrado" });
     }
+    res.json({ mensaje: "Carrito eliminado" });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al eliminar el carrito", error });
+  }
 });
 
 
