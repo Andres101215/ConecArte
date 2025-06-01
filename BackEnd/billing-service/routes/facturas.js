@@ -27,15 +27,40 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-//Crear una nuevo factura (POST)
-router.post("/", async (req, res) => {
-    try {
-        const nuevoFactura = new Factura(req.body);
-        await nuevoFactura.save();
-        res.status(201).json(nuevoFactura);
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al crear la factura", error });
+router.post('/facturar', async (req, res) => {
+  try {
+    const { id_usuario, metodo_pago, referencia } = req.body;
+
+    // 1. Obtener carrito del microservicio de carrito
+    const { data: carrito } = await axios.get(`https://conecarte-8olx.onrender.com/carritos/carritos/usuario/${id_usuario}`);
+
+    if (!carrito || !carrito.productos || carrito.productos.length === 0) {
+      return res.status(404).json({ mensaje: 'El carrito está vacío o no existe' });
     }
+
+    // 2. Crear factura
+    const nuevaFactura = new Factura({
+      id_usuario,
+      metodo_pago,
+      referencia,
+      valor: carrito.total,
+      productos: carrito.productos.map(({ id_producto, cantidad }) => ({
+        id_producto,
+        cantidad
+      }))
+    });
+
+    await nuevaFactura.save();
+
+    // 3. Vaciar carrito (suponiendo que existe un endpoint para esto)
+    await axios.put(`https://conecarte-8olx.onrender.com/carritos/carritos/vaciar/${id_usuario}`);
+
+    res.status(201).json({ mensaje: 'Factura generada y carrito vaciado', factura: nuevaFactura });
+
+  } catch (error) {
+    console.error('Error al generar factura:', error.message);
+    res.status(500).json({ mensaje: 'Error al generar la factura', error: error.message });
+  }
 });
 
 //Actualizar una factura por ID (PUT)

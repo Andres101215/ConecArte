@@ -173,4 +173,26 @@ router.delete("/:id_usuario/:id_producto", async (req, res) => {
     res.status(500).json({ mensaje: "Error interno del servidor" });
   }
 });
+
+
+router.put('/vaciar/:id_usuario', async (req, res) => {
+  try {
+    const carrito = await Carrito.findOne({ id_usuario: req.params.id_usuario });
+
+    if (!carrito) {
+      return res.status(404).json({ mensaje: 'Carrito no encontrado' });
+    }
+
+    carrito.productos = [];
+    carrito.total = 0;
+    await carrito.save();
+
+    res.status(200).json({ mensaje: 'Carrito vaciado exitosamente' });
+  } catch (error) {
+    console.error('Error al vaciar el carrito:', error.message);
+    res.status(500).json({ mensaje: 'Error al vaciar el carrito', error: error.message });
+  }
+});
+
+
 module.exports = router;
