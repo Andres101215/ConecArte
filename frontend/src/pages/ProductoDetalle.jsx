@@ -88,22 +88,21 @@ export default function ProductoDetalle() {
               <p><strong>Disponibles:</strong> {producto.cantidad} unidades</p>
 
               <div className="mb-3" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-  <label className="form-label"><strong>Cantidad:</strong></label>
-  <input
-    type="number"
-    min="1"
-    max={producto.cantidad}
-    value={cantidad}
-    onChange={(e) => setCantidad(e.target.value)}
-    className="form-control cantidad-input"
-    style={{ maxWidth: "120px" }}
-  />
-</div>
-
+                <label className="form-label"><strong>Cantidad:</strong></label>
+                <input
+                  type="number"
+                  min="1"
+                  max={producto.cantidad}
+                  value={cantidad}
+                  onChange={(e) => setCantidad(e.target.value)}
+                  className="form-control cantidad-input"
+                  style={{ maxWidth: "120px" }}
+                />
+              </div>
 
               <h4 className="text-success"><strong>Precio:</strong> ${producto.precio}</h4>
 
-           
+
               <button className="btn btn-outline-dark mt-3 ms-2" onClick={() => setMostrarModal(true)}>
                 Ver Reseñas
               </button>
