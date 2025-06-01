@@ -62,24 +62,28 @@ function CarritoUsuario() {
         <div className="container">
           <h2 className="titulo-carrito text-center mb-4">Carrito de Compras</h2>
           <div className="grid-container">
-            {Array.isArray(carrito.productosCom) && Array.isArray(carrito.productos) && carrito.productosCom.map((producto, index) => (
-              <div className="card position-relative" key={producto._id}>
-                <button
-                  className="btn btn-danger position-absolute top-0 end-0 m-2"
-                  onClick={() => eliminarProducto(producto._id)}
-                  title="Eliminar"
-                >
-                  ×
-                </button>
-                <img src={producto.imagen} alt={producto.nombre} />
-                <div className="card-body">
-                  <h5 className="card-title">{producto.nombre}</h5>
-                  <p className="card-text">{producto.descripcion}</p>
-                  <p><strong>Cantidad:</strong> {carrito.productos[index].cantidad}</p>
-                  <p className="precio-rojo">Precio: ${producto.precio}</p>
+            {Array.isArray(carrito.productosCom) && Array.isArray(carrito.productos) && carrito.productosCom.map((producto) => {
+              const detalle = carrito.productos.find(p => p.id_producto === producto._id);
+              return (
+                <div className="card position-relative" key={producto._id}>
+                  <button
+                    className="btn btn-danger position-absolute top-0 end-0 m-2"
+                    onClick={() => eliminarProducto(producto._id)}
+                    title="Eliminar"
+                  >
+                    ×
+                  </button>
+                  <img src={producto.imagen} alt={producto.nombre} />
+                  <div className="card-body">
+                    <h5 className="card-title">{producto.nombre}</h5>
+                    <p className="card-text">{producto.descripcion}</p>
+                    <p><strong>Cantidad:</strong> {detalle?.cantidad ?? "?"}</p>
+                    <p className="precio-rojo">Precio: ${producto.precio}</p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
+
           </div>
 
           <h3 className="total-carrito text-end mt-4">Total: ${carrito.total}</h3>
