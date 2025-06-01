@@ -38,7 +38,7 @@ export default function RegisterSeller() {
       className="register-background"
       style={{ backgroundImage: `url(${tiendaFondo})` }}
     >
-      <div className="overlay">
+      <div className="overlay" style={{ paddingTop: '110px' }}>
         <div className="container form-container p-4">
           <h2
             className="mb-4 text-center text-primary"

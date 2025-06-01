@@ -37,7 +37,7 @@ function Perfil() {
 
   return (
     <div className="perfil-container">
-      <div className="overlay">
+      <div className="overlay" style={{ paddingTop: '110px' }}>
         <div className="card perfil-card shadow-lg mx-auto">
           <div className="card-body text-center">
             <FaUserCircle size={100} className="text-secondary mb-4" />

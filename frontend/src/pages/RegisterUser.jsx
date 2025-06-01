@@ -71,12 +71,12 @@ export default function RegisterUser() {
   return (
     <div
       className="register-background"
-      style={{ backgroundImage: `url(${registroFondo})` }}
+     
     >
-      <div className="overlay">
-        <div className="form-wrapper">
+
+        <div className="form-wrapper" style={{ paddingTop: '140px' }}>
           <div className="form-container">
-            <h2 className="mb-4 text-blue text-center" style={{ textShadow: "2px 2px 4px rgba(0,0,0,0.5)" }}>
+            <h2 className="mb-4 text-black text-center" >
               Registro Usuario
             </h2>
             <form
@@ -162,6 +162,6 @@ export default function RegisterUser() {
           </div>
         </div>
       </div>
-    </div>
+    
   );
 }

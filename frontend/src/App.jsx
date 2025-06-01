@@ -17,6 +17,7 @@ import Movimientos from './pages/Movimientos';
 import VendedorAdmin from './pages/VendedorAdmin';
 import UsuariosAdmin from './pages/UsuariosAdmin';
 import ProductosAdmin from './pages/ProductosAdmin';
+import ProductoDetalleCliente from './pages/ProductoDetalleCliente';
 
 
 
@@ -45,6 +46,7 @@ function App() {
           <Route path="/panelUser" element={<PanelUser />} />
           <Route path="/panelSeller" element={<PanelSeller />} />
           <Route path="/producto/:id" element={<ProductoDetalle />} />
+          <Route path="/producto1/:id" element={<ProductoDetalleCliente />} />
           <Route path="/perfil" element={<Perfil />} />
           <Route path="/mistiendas" element={<MisTiendas />} />
           <Route path="/movimientos" element={<Movimientos />} />

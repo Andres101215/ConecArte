@@ -31,11 +31,11 @@ function PanelUser() {
 
   return (
     <div className="panel-user-fondo">
-      <div className="overlay">
+      <div className="overlay" style={{ paddingTop: '240px' }}>
         <div className="container mt-5">
           <div className="grid-container">
             {productos.map((producto) => (
-              <Link to={`/producto/${producto._id}`} key={producto._id} className="card-link">
+              <Link to={`/producto1/${producto._id}`} key={producto._id} className="card-link">
                 <div className="card h-100">
                   <img src={producto.imagen} alt={producto.nombre} className="card-img-top" />
                   <div className="card-body">
