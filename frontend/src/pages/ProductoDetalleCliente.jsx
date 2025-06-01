@@ -2,37 +2,56 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import './ProductoDetalle.css';
+import ModalBuzon from '../components/ModalBuzon';
 
 export default function ProductoDetalle() {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [producto, setProducto] = useState(null);
-  const [mensaje, setMensaje] = useState("");
+  const [mensaje, setMensaje] = useState('');
   const [cantidad, setCantidad] = useState(1);
   const [mostrarModal, setMostrarModal] = useState(false);
+  const [showBuzon, setShowBuzon] = useState(false);
 
   const [reseñas, setReseñas] = useState([
     {
-      id_usuario: "usuario1",
+      id_usuario: 'usuario1',
       calificacion: 5,
-      comentario: "¡Excelente producto!",
-      fecha: "2024-05-01"
+      comentario: '¡Excelente producto!',
+      fecha: '2024-05-01'
     },
     {
-      id_usuario: "usuario2",
+      id_usuario: 'usuario2',
       calificacion: 4,
-      comentario: "Muy bonito, volvería a comprar",
-      fecha: "2024-05-10"
+      comentario: 'Muy bonito, volvería a comprar',
+      fecha: '2024-05-10'
     }
   ]);
 
   const [nuevaReseña, setNuevaReseña] = useState({
     calificacion: 0,
-    comentario: ""
+    comentario: ''
   });
 
-  const id_usuario = localStorage.getItem("id_usuario");
+  const id_usuario = localStorage.getItem('id_usuario');
+
+  const conversaciones = [
+    {
+      user: 'cliente_juan',
+      mensajes: [
+        { emisor: false, texto: 'Hola, estoy interesado en tu producto.' },
+        { emisor: true, texto: '¡Perfecto! ¿Cuál te gusta?' }
+      ]
+    },
+    {
+      user: 'comprador_maria',
+      mensajes: [
+        { emisor: true, texto: 'Hola, ¿necesitas ayuda?' },
+        { emisor: false, texto: 'Sí, ¿qué colores tienes?' }
+      ]
+    }
+  ];
 
   useEffect(() => {
     fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`)
@@ -43,14 +62,14 @@ export default function ProductoDetalle() {
 
   const añadirAlCarrito = async () => {
     if (!id_usuario) {
-      setMensaje("Debes iniciar sesión para añadir productos al carrito.");
+      setMensaje('Debes iniciar sesión para añadir productos al carrito.');
       return;
     }
 
     try {
-      const res = await fetch("https://conecarte-8olx.onrender.com/carritos/carritos/agregar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+      const res = await fetch('https://conecarte-8olx.onrender.com/carritos/carritos/agregar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           id_usuario,
           id_producto: id,
@@ -59,27 +78,27 @@ export default function ProductoDetalle() {
       });
 
       const data = await res.json();
-      setMensaje(res.ok ? "Producto añadido al carrito" : (data.mensaje || "Error al añadir al carrito"));
+      setMensaje(res.ok ? 'Producto añadido al carrito' : data.mensaje || 'Error al añadir al carrito');
     } catch (error) {
-      console.error("Error al añadir al carrito:", error);
-      setMensaje("Error de red");
+      console.error('Error al añadir al carrito:', error);
+      setMensaje('Error de red');
     }
   };
 
   const enviarReseña = () => {
     if (!id_usuario) {
-      setMensaje("Debes iniciar sesión para comentar.");
+      setMensaje('Debes iniciar sesión para comentar.');
       return;
     }
 
     const reseñaLocal = {
       ...nuevaReseña,
-      id_usuario: "usuarioActual", // Puedes reemplazarlo por el verdadero nombre si lo tienes
-      fecha: new Date().toISOString().split("T")[0]
+      id_usuario: 'usuarioActual', // Reemplazar con el nombre real si se tiene
+      fecha: new Date().toISOString().split('T')[0]
     };
 
     setReseñas(prev => [...prev, reseñaLocal]);
-    setNuevaReseña({ calificacion: 0, comentario: "" });
+    setNuevaReseña({ calificacion: 0, comentario: '' });
   };
 
   if (!producto) {
@@ -91,7 +110,7 @@ export default function ProductoDetalle() {
   }
 
   return (
-    <div className="producto-detalle-fondo">
+    <div className="producto-detalle-fondo position-relative">
       <div className="overlay" style={{ paddingTop: '110px' }}>
         <div className="producto-detalle-layout">
           <div className="producto-detalle-info card shadow-lg p-4 bg-light">
@@ -110,30 +129,31 @@ export default function ProductoDetalle() {
                   value={cantidad}
                   onChange={(e) => setCantidad(e.target.value)}
                   className="form-control cantidad-input"
-                  style={{ maxWidth: "120px" }}
+                  style={{ maxWidth: '120px' }}
                 />
               </div>
 
               <h4 className="text-success"><strong>Precio:</strong> ${producto.precio}</h4>
 
-                  <div className="d-flex flex-wrap justify-content-center align-items-center gap-2 mt-3">
-                    <button className="btn btn-primary" onClick={añadirAlCarrito}>
-                      Añadir al Carrito
-                    </button>
+              <div className="d-flex flex-wrap justify-content-center align-items-center gap-2 mt-3">
+                <button className="btn btn-primary" onClick={añadirAlCarrito}>
+                  Añadir al Carrito
+                </button>
 
-                    <button className="btn btn-outline-dark" onClick={() => setMostrarModal(true)}>
-                      Ver Reseñas
-                    </button>
+                <button className="btn btn-outline-dark" onClick={() => setMostrarModal(true)}>
+                  Ver Reseñas
+                </button>
 
-                    <button
-                      className="btn btn-secondary d-flex align-items-center"
-                      onClick={() => navigate("/perfil")}
-                      title="Ir al perfil"
-                    >
-                      <FaUserCircle size={20} className="me-1" />
-                      Perfil
-                    </button>
-                  </div>
+                <button
+                  className="btn btn-secondary d-flex align-items-center"
+                  onClick={() => navigate('/perfil')}
+                  title="Ir al perfil"
+                >
+                  <FaUserCircle size={20} className="me-1" />
+                  Perfil
+                </button>
+              </div>
+
               {mensaje && <div className="alert alert-info mt-3">{mensaje}</div>}
             </div>
           </div>
@@ -142,7 +162,7 @@ export default function ProductoDetalle() {
 
       {/* Modal de Reseñas */}
       {mostrarModal && (
-        <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0,0,0,0.5)" }}>
+        <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog modal-dialog-scrollable modal-lg">
             <div className="modal-content">
               <div className="modal-header">
@@ -153,7 +173,7 @@ export default function ProductoDetalle() {
                 {reseñas.map((r, index) => (
                   <div key={index} className="border-bottom pb-2 mb-2">
                     <p><strong>{r.id_usuario}</strong> - {r.fecha}</p>
-                    <p>{"⭐".repeat(r.calificacion)} ({r.calificacion}/5)</p>
+                    <p>{'⭐'.repeat(r.calificacion)} ({r.calificacion}/5)</p>
                     <p>{r.comentario}</p>
                   </div>
                 ))}
@@ -197,6 +217,22 @@ export default function ProductoDetalle() {
           </div>
         </div>
       )}
+
+      {/* Botón del buzón en la esquina inferior derecha */}
+      <button
+        className="btn btn-primary position-fixed"
+        style={{ bottom: '20px', right: '20px', zIndex: 1050 }}
+        onClick={() => setShowBuzon(true)}
+      >
+        Buzón
+      </button>
+
+      {/* Modal del Buzón */}
+      <ModalBuzon
+        show={showBuzon}
+        onHide={() => setShowBuzon(false)}
+        conversaciones={conversaciones}
+      />
     </div>
   );
 }
