@@ -13,7 +13,7 @@ const facturaSchema = new mongoose.Schema({
   referencia: { type: String, required: true },
   valor: { type: Number, required: true },
   productos: [productoSchema]
-}, { collection: 'Facturaciones' });
+}, { collection: 'Facturacion' });
 
 
 const Facturacion = mongoose.model("Facturacion", facturaSchema); // El primer parámetro no afecta la colección en la BD
