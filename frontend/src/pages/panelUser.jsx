@@ -31,8 +31,8 @@ function PanelUser() {
 
   return (
     <div className="panel-user-fondo">
-      <div className="overlay" style={{ paddingTop: '240px' }}>
-        <div className="container mt-5">
+      
+        <div className="container mt-5" style={{ paddingTop: '50px' }}>
           <div className="grid-container">
             {productos.map((producto) => (
               <Link to={`/producto1/${producto._id}`} key={producto._id} className="card-link">
@@ -52,7 +52,7 @@ function PanelUser() {
         <button className="btn btn-primary carrito-flotante" onClick={() => navigate("/pasarela")}>
           <FaShoppingCart size={24} />
         </button>
-      </div>
+      
     </div>
   );
 }

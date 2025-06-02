@@ -1,20 +1,23 @@
 .panel-user-fondo {
+  position: relative; /* Necesario para que ::before funcione correctamente */
   background-image: url('../assets/pendiente1.webp');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
   min-height: 100vh;
-  padding-top: 80px; /* Espacio para el navbar */
+  padding-top: 80px;
+  z-index: 0; /* más bajo que el contenido */
+  overflow: hidden; /* asegura que no se desborde */
 }
 
-.overlay {
-  background-color: rgba(255, 255, 255, 0.85);
-  min-height: 100vh;
-  max-height: 100vh; /* Limita la altura al viewport */
-  overflow-y: auto;  /* Permite desplazamiento vertical */
-  padding: 120px 20px 40px 20px;
-  box-sizing: border-box;
+.panel-user-fondo::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: -1; /* detrás del contenido, pero visible */
 }
+
 
 .grid-container {
   display: grid;
