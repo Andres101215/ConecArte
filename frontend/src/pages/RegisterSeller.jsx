@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './RegisterSeller.css';
-import tiendaFondo from '../assets/tienda.webp'; // Asegúrate de tener esta imagen
+import tiendaFondo from '../assets/tienda.webp';
 
 export default function RegisterSeller() {
   const [nombreTienda, setNombreTienda] = useState('');
@@ -9,9 +9,11 @@ export default function RegisterSeller() {
   const [experiencia, setExperiencia] = useState('');
   const [redesSociales, setRedesSociales] = useState('');
   const [validated, setValidated] = useState(false);
+
+  const id_usuario = localStorage.getItem('id_usuario');
   const fechaRegistro = new Date().toISOString();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setValidated(true);
 
@@ -25,12 +27,40 @@ export default function RegisterSeller() {
       categorias: categorias.split(',').map(cat => cat.trim()),
       experiencia: parseInt(experiencia),
       redes_sociales: redesSociales.split(',').map(red => red.trim()),
+      productos_ids: [], // 👈 Muy importante
       fecha_registro: fechaRegistro,
+      id_usuario
     };
 
-    console.log(tiendaData);
-    alert('Tienda registrada con éxito');
-    // Aquí luego se enviarán los datos al backend
+
+    try {
+      const response = await fetch("https://conecarte-8olx.onrender.com/vendedores/vendedores", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(tiendaData)
+      });
+
+      if (!response.ok) {
+        throw new Error("Error al registrar la tienda");
+      }
+
+      const data = await response.json();
+      alert("Tienda registrada con éxito");
+
+      // Limpia el formulario
+      setNombreTienda('');
+      setDescripcionTienda('');
+      setCategorias('');
+      setExperiencia('');
+      setRedesSociales('');
+      setValidated(false);
+
+    } catch (error) {
+      console.error("Error al registrar la tienda:", error);
+      alert("Hubo un error al registrar la tienda");
+    }
   };
 
   return (
