@@ -52,9 +52,10 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
+router.delete("/:id/:id_vendedor", async (req, res) => {
   try {
     const idProducto = req.params.id;
+    const id = req.params.id_vendedor;
 
     // Elimina el producto
     const productoEliminado = await Producto.findByIdAndDelete(idProducto);
@@ -63,10 +64,18 @@ router.delete("/:id", async (req, res) => {
     }
 
     // Quitar el ID del producto de todas las tiendas que lo tengan
-    await Tienda.updateMany(
-      { id_productos: idProducto },
-      { $pull: { id_productos: idProducto } }
-    );
+     try {
+        const response = await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/${id}`);
+        const data = await response.json();
+
+        const productos = data.productos_ids
+
+        const nuevaLista = productos.filter(item => item.toString() !== idProducto);
+        await Tienda.findByIdAndUpdate(id, { productos_ids: nuevaLista }, { new: true });
+
+    } catch (error) {
+        console.error('Error al modificar tienda:', error);
+    }
 
     res.json({ mensaje: "Producto eliminado y eliminado de las tiendas asociadas" });
   } catch (error) {
