@@ -76,7 +76,7 @@ function PanelSeller() {
 
     obtenerTiendas();
   
-  }, []);
+  });
 
   if (cargando) return <p className="text-center mt-5 text-white">Cargando productos...</p>;
   if (error) return <p className="text-danger text-center mt-5">Error: {error}</p>;

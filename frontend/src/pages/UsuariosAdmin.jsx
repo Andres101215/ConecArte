@@ -1,42 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Table } from 'react-bootstrap';
 import './FormAdmin.css';
 import { Link } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
 
 function UsuariosAdmin() {
-  const [usuarios, setUsuarios] = useState([
-    {
-      _id: '1',
-      nombre: 'Andrés',
-      apellido: 'Admin',
-      correo: 'andres@admin.com',
-      username: 'admin_andres',
-      tipo_usuario: 'admin',
-      contraseña: '',
-      fecha_nacimiento: '',
-      departamento: '',
-      ciudad: '',
-      direccion: '',
-      genero: '',
-      tipo_documento: '',
-      documento: '',
-      celular: '',
-      fecha_creacion: new Date().toISOString().split('T')[0],
-    },
-  ]);
 
+  const [usuarios, setUsuarios] = useState([]);
   const [showEditModal, setShowEditModal] = useState(false);
   const [usuarioEditado, setUsuarioEditado] = useState(null);
+
+  const obtenerUsuarios = async () => {
+    try {
+      const response = await fetch("https://conecarte-8olx.onrender.com/usuarios/usuarios");
+      const data = await response.json();
+      setUsuarios(data);
+    } catch (err) {
+      console.error("Error al obtener usuarios:", err);
+    }
+  };
+
+  useEffect(() => {
+    obtenerUsuarios();
+  }, []); // ← Ejecutar solo al montar el componente
 
   const abrirModalEdicion = (usuario) => {
     setUsuarioEditado({ ...usuario });
     setShowEditModal(true);
   };
-
   const abrirModalNuevo = () => {
     setUsuarioEditado({
-      _id: Date.now().toString(),
       nombre: '',
       apellido: '',
       correo: '',
@@ -56,27 +49,57 @@ function UsuariosAdmin() {
     setShowEditModal(true);
   };
 
-  const handleChange = (e) => {
-    setUsuarioEditado({
-      ...usuarioEditado,
-      [e.target.name]: e.target.value,
-    });
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setUsuarioEditado((prev) => ({
+      ...prev,
+      [name]: value
+    }));
   };
 
-  const guardarCambios = () => {
-    setUsuarios((prev) => {
-      const existe = prev.find((u) => u._id === usuarioEditado._id);
-      if (existe) {
-        return prev.map((u) => (u._id === usuarioEditado._id ? usuarioEditado : u));
-      } else {
-        return [...prev, usuarioEditado];
+  const guardarCambios = async () => {
+    const esNuevo = !usuarios.some(u => u._id === usuarioEditado._id);
+
+    try {
+      const url = `https://conecarte-8olx.onrender.com/usuarios/usuarios${esNuevo ? '' : `/${usuarioEditado._id}`}`;
+      const metodo = esNuevo ? "POST" : "PUT";
+
+      const response = await fetch(url, {
+        method: metodo,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(usuarioEditado),
+      });
+
+
+      if (!response.ok) {
+        throw new Error(`Error al ${esNuevo ? 'crear' : 'actualizar'} el usuario`);
       }
-    });
-    setShowEditModal(false);
+
+      await obtenerUsuarios();
+      setShowEditModal(false);
+      setUsuarioEditado(null);
+
+    } catch (error) {
+      console.error("Error al guardar el usuario:", error);
+    }
   };
 
-  const eliminarUsuario = (id) => {
+  const eliminarUsuario = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este usuario?')) {
+      try {
+        const response = await fetch(`https://conecarte-8olx.onrender.com/usuarios/usuarios/${id}`, {
+          method: "DELETE"
+        });
+
+        const data = await response.json();
+        console.log("Usuario eliminado:", data);
+
+        // Aquí podrías actualizar el estado para que desaparezca de la vista
+      } catch (error) {
+        console.error("Error al eliminar el usuario:", error);
+      }
       setUsuarios((prev) => prev.filter((u) => u._id !== id));
     }
   };
@@ -144,7 +167,7 @@ function UsuariosAdmin() {
                   type={type}
                   name={name}
                   value={usuarioEditado?.[name] || ''}
-                  onChange={handleChange}
+                  onChange={handleInputChange}
                 />
               </Form.Group>
             ))}
@@ -154,7 +177,7 @@ function UsuariosAdmin() {
                 as="select"
                 name="tipo_usuario"
                 value={usuarioEditado?.tipo_usuario}
-                onChange={handleChange}
+                onChange={handleInputChange}
               >
                 <option value="usuario">Usuario</option>
                 <option value="vendedor">Vendedor</option>
