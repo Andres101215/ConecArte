@@ -35,7 +35,7 @@ function MisTiendas() {
     obtenerTiendas();
   }, []);
 
-
+  const [tiendaSeleccionada, setTiendaSeleccionada] = useState(null);
 
   const handleVerProductos = async (tienda) => {
     try {
@@ -48,6 +48,7 @@ function MisTiendas() {
 
       setProductosTienda(productos);
       setNombreTienda(tienda.nombre_tienda);
+      setTiendaSeleccionada(tienda);
       setShowModal(true); // Siempre mostramos el modal, aunque esté vacío
     } catch (error) {
       console.error('Error al obtener los productos de la tienda:', error);
@@ -107,6 +108,8 @@ function MisTiendas() {
         onHide={() => setShowModal(false)}
         productos={productosTienda}
         nombreTienda={nombreTienda}
+        idTienda={tiendaSeleccionada}
+        refrescarProductos={() => handleVerProductos(tiendaSeleccionada)}
       />
     </div>
   );

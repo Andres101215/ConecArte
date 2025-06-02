@@ -100,7 +100,7 @@ router.put('/agregar-producto/:id_tienda', async (req, res) => {
     
     if (!tienda) return res.status(404).send("Tienda no encontrada");
 
-    tienda.id_productos.push(id_producto);
+    tienda.productos_ids.push(id_producto);
     await tienda.save();
 
     res.status(200).json({ mensaje: "Producto agregado a la tienda", tienda });
