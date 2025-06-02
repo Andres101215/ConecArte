@@ -1,8 +1,7 @@
-// components/ModalFormularioProducto.jsx
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicion, refrescarProductos}) => {
+const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicion, refrescarProductos }) => {
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
@@ -11,6 +10,8 @@ const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicio
     ubicacion: "",
     id_categoria: ""
   });
+
+  const [imagen, setImagen] = useState(null); // imagen seleccionada
 
   useEffect(() => {
     if (modoEdicion && producto) {
@@ -32,6 +33,7 @@ const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicio
         id_categoria: ""
       });
     }
+    setImagen(null); // Reiniciar imagen al abrir modal
   }, [modoEdicion, producto]);
 
   const handleChange = (e) => {
@@ -39,35 +41,57 @@ const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicio
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async() => {
-    if (!modoEdicion) {
-      console.log("Guardando nuevo producto:");
-      // Aquí podrías agregar la lógica para editar un product
-    onGuardar(formData);
-    onHide(); // cerrar modal luego de guardar
-    }
-    else {
-      console.log("Editando producto existente:");
-      const id = producto._id
-      console.log("ID del producto a editar:", id);
-      await fetch("https://conecarte-8olx.onrender.com/productos/productos/"+id, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id_artesano: producto.id_artesano,
-            nombre: formData.nombre,
-            descripcion: formData.descripcion,
-            precio: parseFloat(formData.precio),
-            cantidad: parseInt(formData.cantidad),
-            ubicacion: formData.ubicacion,
-            fecha_creacion: new Date(), // O puedes dejar la original si no cambia
-            id_categoria: formData.id_categoria
-          })
+  const handleImageChange = (e) => {
+    setImagen(e.target.files[0]);
+  };
+
+  const handleSubmit = async () => {
+    let imageData = null;
+
+    if (imagen) {
+      try {
+        const data = new FormData();
+        data.append("imagen", imagen);
+        data.append("id_artesano", producto?.id_artesano || "default-artesano"); // Modifica según tu lógica
+
+        const res = await fetch("http://localhost:5000/imagenes", {
+          method: "POST",
+          body: data
         });
-    refrescarProductos(); // Actualizar la lista de productos
-    onHide(); // cerrar modal luego de guardar
+
+        const json = await res.json();
+        imageData = json;
+      } catch (error) {
+        console.error("Error al subir la imagen:", error);
+      }
+    }
+
+    if (!modoEdicion) {
+      const nuevoProducto = {
+        ...formData,
+        id_artesano: producto?.id_artesano || "default-artesano",
+        fecha_creacion: new Date(),
+        image: imageData
+      };
+
+      onGuardar(nuevoProducto);
+      onHide();
+    } else {
+      const id = producto._id;
+
+      await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          id_artesano: producto.id_artesano,
+          fecha_creacion: new Date(),
+          image: imageData || producto.image // mantener imagen previa si no se sube una nueva
+        })
+      });
+
+      refrescarProductos();
+      onHide();
     }
   };
 
@@ -80,68 +104,44 @@ const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicio
         <Form>
           <Form.Group className="mb-3">
             <Form.Label>Nombre</Form.Label>
-            <Form.Control
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-            />
+            <Form.Control name="nombre" value={formData.nombre} onChange={handleChange} />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Descripción</Form.Label>
-            <Form.Control
-              name="descripcion"
-              value={formData.descripcion}
-              onChange={handleChange}
-            />
+            <Form.Control name="descripcion" value={formData.descripcion} onChange={handleChange} />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Precio</Form.Label>
-            <Form.Control
-              name="precio"
-              type="number"
-              value={formData.precio}
-              onChange={handleChange}
-            />
+            <Form.Control name="precio" type="number" value={formData.precio} onChange={handleChange} />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Cantidad</Form.Label>
-            <Form.Control
-              name="cantidad"
-              type="number"
-              value={formData.cantidad}
-              onChange={handleChange}
-            />
+            <Form.Control name="cantidad" type="number" value={formData.cantidad} onChange={handleChange} />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Ubicación</Form.Label>
-            <Form.Control
-              name="ubicacion"
-              value={formData.ubicacion}
-              onChange={handleChange}
-            />
+            <Form.Control name="ubicacion" value={formData.ubicacion} onChange={handleChange} />
           </Form.Group>
 
           <Form.Group className="mb-3">
             <Form.Label>Categoría</Form.Label>
-            <Form.Control
-              name="id_categoria"
-              value={formData.id_categoria}
-              onChange={handleChange}
-            />
+            <Form.Control name="id_categoria" value={formData.id_categoria} onChange={handleChange} />
+          </Form.Group>
+
+          <Form.Group className="mb-3">
+            <Form.Label>Imagen</Form.Label>
+            <Form.Control type="file" accept="image/*" onChange={handleImageChange} />
           </Form.Group>
         </Form>
       </Modal.Body>
+
       <Modal.Footer>
-        <Button variant="secondary" onClick={onHide}>
-          Cancelar
-        </Button>
-        <Button variant="primary" onClick={handleSubmit}>
-          Guardar
-        </Button>
+        <Button variant="secondary" onClick={onHide}>Cancelar</Button>
+        <Button variant="primary" onClick={handleSubmit}>Guardar</Button>
       </Modal.Footer>
     </Modal>
   );

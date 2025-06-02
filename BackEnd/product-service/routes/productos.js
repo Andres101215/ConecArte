@@ -50,7 +50,7 @@ router.post("/", async (req, res) => {
 
     // Subir imagen al microservicio de imágenes
     const response = await axios.post(
-      `http://localhost:5000/imagenes/${id_artesano}`,
+      `https://conecarte-ciq4.onrender.com/imagenes/${id_artesano}`,
       form,
       { headers: form.getHeaders() }
     );
@@ -105,7 +105,7 @@ router.delete("/:id/:id_vendedor", async (req, res) => {
     // Eliminar la imagen desde el microservicio
     if (publicIdImagen) {
       try {
-        await axios.delete(`http://localhost:5000/imagenes/${publicIdImagen}`);
+        await axios.delete(`https://conecarte-ciq4.onrender.com/imagenes/${publicIdImagen}`);
         console.log("Imagen eliminada correctamente");
       } catch (error) {
         console.error("Error al eliminar la imagen:", error.message);
