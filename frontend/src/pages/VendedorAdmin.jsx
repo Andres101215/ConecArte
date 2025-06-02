@@ -1,47 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Table } from 'react-bootstrap';
 import './FormAdmin.css';
 import { Link } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
 
 function VendedorAdmin() {
-  const [vendedores, setVendedores] = useState([
-    {
-      _id: '1',
-      nombre_tienda: 'Artesanías Luz',
-      descripcion_tienda: 'Hecho a mano con amor',
-      categorias: ['textil', 'decoración'],
-      experiencia: 5,
-      redes_sociales: ['@artesluz'],
-      productos: 'macrame, bolsos, tapices',
-      fecha_registro: '2022-03-15',
-      id_usuario: 'user123',
-    },
-    {
-      _id: '2',
-      nombre_tienda: 'Galería de Madera',
-      descripcion_tienda: 'Arte en madera reciclada',
-      categorias: ['escultura', 'hogar'],
-      experiencia: 8,
-      redes_sociales: ['@galeriamadera'],
-      productos: 'cuadros, mesas, esculturas',
-      fecha_registro: '2023-01-10',
-      id_usuario: 'user456',
-    },
-  ]);
 
+  const [vendedores, setVendedores] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [vendedorEditando, setVendedorEditando] = useState(null);
+  const [usuariosVendedores, setUsuariosVendedores] = useState([]);
+
+
+  const obtenerTiendas = async () => {
+    try {
+      const response = await fetch("https://conecarte-8olx.onrender.com/vendedores/vendedores");
+      const data = await response.json();
+      setVendedores(data);
+    } catch (err) {
+      console.error("Error al obtener vendedores:", err);
+    }
+  };
+
+  const obtenerVendedores = async () => {
+    try {
+      const response = await fetch("https://conecarte-8olx.onrender.com/usuarios/usuarios/");
+      const data = await response.json();
+
+      const vendedores = data.filter((u) => u.tipo_usuario === "vendedor");
+      setUsuariosVendedores(vendedores);
+    } catch (err) {
+      console.error("Error al obtener vendedores:", err);
+    }
+  };
+
+  useEffect(() => {
+      obtenerTiendas();
+      obtenerVendedores();
+  }, []);
 
   const abrirModalNuevo = () => {
     setVendedorEditando({
-      _id: Date.now().toString(),
       nombre_tienda: '',
       descripcion_tienda: '',
       categorias: [],
       experiencia: 0,
       redes_sociales: [],
-      productos: '',
+      productos: [],
       fecha_registro: new Date().toISOString().split('T')[0],
       id_usuario: '',
     });
@@ -58,23 +63,50 @@ function VendedorAdmin() {
     setVendedorEditando((prev) => ({ ...prev, [name]: value }));
   };
 
-  const guardarCambios = () => {
-    setVendedores((prev) => {
-      const existe = prev.find((v) => v._id === vendedorEditando._id);
-      if (existe) {
-        return prev.map((v) =>
-          v._id === vendedorEditando._id ? vendedorEditando : v
-        );
-      } else {
-        return [...prev, vendedorEditando];
+  const guardarCambios = async () => {
+    const esNuevo = !vendedores.some(v => v._id === vendedorEditando._id);
+
+    try {
+      const url = `https://conecarte-8olx.onrender.com/vendedores/vendedores${esNuevo ? '' : `/${vendedorEditando._id}`}`;
+      const metodo = esNuevo ? "POST" : "PUT";
+
+      const response = await fetch(url, {
+        method: metodo,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(vendedorEditando),
+      });
+
+
+      if (!response.ok) {
+        throw new Error(`Error al ${esNuevo ? 'crear' : 'actualizar'} el usuario`);
       }
-    });
-    setShowModal(false);
+
+      await obtenerTiendas();
+      setShowModal(false);
+      setVendedorEditando(null);
+
+    } catch (error) {
+      console.error("Error al guardar el vendedor:", error);
+    }
   };
 
-  const eliminarVendedor = (id) => {
+  const eliminarVendedor = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este vendedor?')) {
-      setVendedores((prev) => prev.filter((v) => v._id !== id));
+      try {
+        const response = await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/${id}`, {
+          method: "DELETE"
+        });
+
+        const data = await response.json();
+        console.log("Vendedor eliminado:", data);
+
+        // Aquí podrías actualizar el estado para que desaparezca de la vista
+      } catch (error) {
+        console.error("Error al eliminar el vendedor:", error);
+      }
+      setVendedores((prev) => prev.filter((u) => u._id !== id));
     }
   };
 
@@ -82,7 +114,7 @@ function VendedorAdmin() {
     <div className="admin-overlay">
       <div className="container admin-card">
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h2 className="admin-title">Gestión de Vendedores</h2>
+          <h2 className="admin-title">Gestión de Tiendas</h2>
           <Button variant="success" onClick={abrirModalNuevo}>
             + Agregar Vendedor
           </Button>
@@ -188,14 +220,6 @@ function VendedorAdmin() {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>Productos</Form.Label>
-              <Form.Control
-                name="productos"
-                value={vendedorEditando?.productos || ''}
-                onChange={handleChange}
-              />
-            </Form.Group>
-            <Form.Group>
               <Form.Label>Fecha de Registro</Form.Label>
               <Form.Control
                 type="date"
@@ -205,12 +229,19 @@ function VendedorAdmin() {
               />
             </Form.Group>
             <Form.Group>
-              <Form.Label>ID Usuario</Form.Label>
-              <Form.Control
+              <Form.Label>Seleccionar Usuario Vendedor</Form.Label>
+              <Form.Select
                 name="id_usuario"
                 value={vendedorEditando?.id_usuario || ''}
                 onChange={handleChange}
-              />
+              >
+                <option value="">Selecciona un vendedor...</option>
+                {usuariosVendedores.map((usuario) => (
+                  <option key={usuario._id} value={usuario._id}>
+                    {usuario.nombre} ({usuario.correo})
+                  </option>
+                ))}
+              </Form.Select>
             </Form.Group>
           </Form>
         </Modal.Body>
