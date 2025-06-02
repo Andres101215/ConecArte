@@ -30,13 +30,18 @@ router.get("/:id", async (req, res) => {
 //Crear una nueva reseña (POST)
 router.post("/", async (req, res) => {
     try {
-        const nuevaResena = new Resena(req.body);
+        const nuevaResena = new Resena({
+            ...req.body,
+            fecha: new Date().toISOString()
+        });
+
         await nuevaResena.save();
         res.status(201).json(nuevaResena);
     } catch (error) {
         res.status(500).json({ mensaje: "Error al crear la reseña", error });
     }
 });
+
 
 //Actualizar una reseña por ID (PUT)
 router.put("/:id", async (req, res) => {
@@ -63,5 +68,15 @@ router.delete("/:id", async (req, res) => {
         res.status(500).json({ mensaje: "Error al eliminar la reseña", error });
     }
 });
+
+router.get("/producto/:id", async (req, res) => {
+  try {
+    const reseñas = await Resena.find({ id_producto: req.params.id });
+    res.json(reseñas);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al obtener reseñas" });
+  }
+});
+
 
 module.exports = router;

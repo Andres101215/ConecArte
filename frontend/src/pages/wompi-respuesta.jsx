@@ -32,7 +32,7 @@ const WompiRespuesta = () => {
             })
               .then(res => res.json())
               .then(() => {
-                setMensaje("🎉 Tu transacción terminó con éxito. ¡Gracias por comprar con ConectArte!");
+                setMensaje("Tu transacción terminó con éxito. ¡Gracias por comprar con ConectArte!");
                 setEstado("exito");
               })
               .catch(() => {
@@ -40,7 +40,7 @@ const WompiRespuesta = () => {
                 setEstado("error");
               });
           } else {
-            setMensaje("⚠️ Tu transacción no fue aprobada.");
+            setMensaje("⚠️Tu transacción no fue aprobada.");
             setEstado("no_aprobada");
           }
         })
