@@ -28,6 +28,11 @@ export default function ProductoDetalle() {
       .then(res => res.json())
       .then(data => setProducto(data))
       .catch(err => console.error(err));
+
+      fetch(`https://conecarte-8olx.onrender.com/resenas/resenas/producto/${id}`)
+    .then(res => res.json())
+    .then(data => setReseñas(data))
+    .catch(err => console.error(err));
   }, [id]);
 
   const añadirAlCarrito = async () => {
@@ -56,21 +61,40 @@ export default function ProductoDetalle() {
     }
   };
 
-  const enviarReseña = () => {
-    if (!id_usuario) {
-      setMensaje("Debes iniciar sesión para comentar.");
-      return;
+const enviarReseña = async () => {
+  if (!id_usuario) {
+    setMensaje("Debes iniciar sesión para comentar.");
+    return;
+  }
+
+  try {
+    const res = await fetch("https://conecarte-8olx.onrender.com/resenas/resenas/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id_usuario,
+        id_producto: id,
+        calificacion: nuevaReseña.calificacion,
+        comentario: nuevaReseña.comentario
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setReseñas(prev => [...prev, { ...nuevaReseña, id_usuario, fecha: new Date().toISOString().split("T")[0] }]);
+      setNuevaReseña({ calificacion: 0, comentario: "" });
+      setMensaje("¡Reseña enviada con éxito!");
+    } else {
+      setMensaje(data.mensaje || "Error al enviar la reseña.");
     }
 
-    const reseñaLocal = {
-      ...nuevaReseña,
-      id_usuario: "usuarioActual",
-      fecha: new Date().toISOString().split("T")[0]
-    };
+  } catch (error) {
+    console.error(error);
+    setMensaje("Error de red al enviar la reseña.");
+  }
+};
 
-    setReseñas(prev => [...prev, reseñaLocal]);
-    setNuevaReseña({ calificacion: 0, comentario: "" });
-  };
 
   if (!producto) return <div className="text-center mt-5"><div className="spinner-border text-primary" /></div>;
 
