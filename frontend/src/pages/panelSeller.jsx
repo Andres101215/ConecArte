@@ -89,7 +89,7 @@ function PanelSeller() {
           {productos.map((producto) => (
             <Link to={`/producto/${producto._id}`} key={producto._id} className="card-link">
               <div className="card">
-                <img src={producto.imagen} alt={producto.nombre} className="card-img-top" />
+                <img src={producto.image?.url} alt={producto.nombre} className="card-img-top" />
                 <div className="card-body">
                   <h5 className="card-title">{producto.nombre}</h5>
                   <p className="card-text precio-rojo">${producto.precio}</p>

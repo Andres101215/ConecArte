@@ -71,7 +71,9 @@ const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicio
     if (!modoEdicion) {
       const nuevoProducto = {
         ...formData,
-        image: imageData.data
+        id_artesano: producto?.id_artesano || "default-artesano",
+        fecha_creacion: new Date(),
+        image: imageData
       };
 
       onGuardar(nuevoProducto);

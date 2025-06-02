@@ -16,6 +16,9 @@ const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refre
 
   const handleGuardarProducto = async (nuevoProducto) => {
     try {
+
+      console.log("Nuevo producto a guardar:", nuevoProducto);
+
       // 1. Guardar producto en la colección
       const response = await fetch("https://conecarte-8olx.onrender.com/productos/productos", {
         method: "POST",
@@ -28,8 +31,6 @@ const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refre
       const productoCreado = await response.json();
 
       const id = idTienda._id
-
-      console.log("idTienda:", idTienda);
 
       // 2. Asociar el producto a la tienda
       await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/agregar-producto/`+id, {

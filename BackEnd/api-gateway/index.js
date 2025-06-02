@@ -15,7 +15,7 @@ require('./routes/review')(app);
 require('./routes/product')(app);
 require('./routes/payment')(app);
 require('./routes/billing')(app);
-//require('./routes/image')(app);
+require('./routes/image')(app);
 require('./routes/conversation')(app);
 require('./routes/message')(app);
 require('./routes/cart')(app);

@@ -33,47 +33,13 @@ router.get("/:id", async (req, res) => {
 
 // Crear un nuevo producto (POST)
 router.post("/", async (req, res) => {
-  try {
-    const { id_artesano } = req.body;
-
-    if (!req.files || !req.files.image) {
-      return res.status(400).json({ mensaje: "No se recibió ninguna imagen" });
+    try {
+        const nuevoProducto = new Producto(req.body);
+        await nuevoProducto.save();
+        res.status(201).json(nuevoProducto);
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al crear el producto", error });
     }
-
-    // Guardar temporalmente la imagen
-    const imageFile = req.files.image;
-    const tempPath = imageFile.tempFilePath;
-
-    // Preparar el form-data para enviar al microservicio de imágenes
-    const form = new FormData();
-    form.append("image", fs.createReadStream(tempPath));
-
-    // Subir imagen al microservicio de imágenes
-    const response = await axios.post(
-      `https://conecarte-ciq4.onrender.com/imagenes/${id_artesano}`,
-      form,
-      { headers: form.getHeaders() }
-    );
-
-    const imageInfo = response.data.data; // { id, url }
-
-    // Crear el nuevo producto incluyendo la imagen
-    const nuevoProducto = new Producto({
-      ...req.body,
-      image: imageInfo,
-      fecha_creacion: new Date(),
-    });
-
-    await nuevoProducto.save();
-
-    // Eliminar archivo temporal si existe
-    await fs.unlink(tempPath);
-
-    res.status(201).json(nuevoProducto);
-  } catch (error) {
-    console.error("Error al crear producto:", error.message);
-    res.status(500).json({ mensaje: "Error al crear el producto", error });
-  }
 });
 
 // Actualizar un producto por ID (PUT)
