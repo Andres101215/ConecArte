@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicion, refrescarProductos }) => {
+const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicion, refrescarProductos, idTienda}) => {
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
@@ -16,6 +16,7 @@ const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicio
   useEffect(() => {
     if (modoEdicion && producto) {
       setFormData({
+        
         nombre: producto.nombre || "",
         descripcion: producto.descripcion || "",
         precio: producto.precio || "",
@@ -48,37 +49,41 @@ const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicio
   const id_usuario = localStorage.getItem("id_usuario");
 
   const handleSubmit = async () => {
-    let imageData = null;
-
-    if (imagen) {
-      try {
-        const data = new FormData();
-        data.append("image", imagen);
-        data.append("id_artesano", producto?.id_artesano || "default-artesano"); // Modifica según tu lógica
-
-        const res = await fetch("https://conecarte-ciq4.onrender.com/imagenes/"+id_usuario, {
-          method: "POST",
-          body: data
-        });
-
-        const json = await res.json();
-        imageData = json;
-      } catch (error) {
-        console.error("Error al subir la imagen:", error);
-      }
-    }
-
-    if (!modoEdicion) {
-      const nuevoProducto = {
-        ...formData,
-        image: imageData.data
-      };
-
-      onGuardar(nuevoProducto);
-      onHide();
-    } else {
+    if (modoEdicion) {
       const id = producto._id;
 
+      // 1. Eliminar imagen anterior si se sube una nueva
+      if (imagen && producto?.image?.id) {
+        try {
+          await fetch(`https://conecarte-ciq4.onrender.com/imagenes/${producto.image.id}`, {
+            method: "DELETE"
+          });
+        } catch (error) {
+          console.error("Error al eliminar la imagen anterior:", error);
+        }
+      }
+
+      // 2. Subir nueva imagen (si hay)
+      let imageData = null;
+      if (imagen) {
+        try {
+          const data = new FormData();
+          data.append("image", imagen);
+          data.append("id_artesano", producto.id_artesano);
+
+          const res = await fetch(`https://conecarte-ciq4.onrender.com/imagenes/${idTienda._id}`, {
+            method: "POST",
+            body: data
+          });
+
+          const json = await res.json();
+          imageData = json;
+        } catch (error) {
+          console.error("Error al subir la imagen:", error);
+        }
+      }
+
+      // 3. Actualizar producto
       await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -86,11 +91,40 @@ const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicio
           ...formData,
           id_artesano: producto.id_artesano,
           fecha_creacion: new Date(),
-          image: imageData || producto.image // mantener imagen previa si no se sube una nueva
+          image: imageData?.data || producto.image
         })
       });
 
       refrescarProductos();
+      onHide();
+    } else {
+      let imageData = null;
+
+      // Subir imagen si se seleccionó
+      if (imagen) {
+        try {
+          const data = new FormData();
+          data.append("image", imagen);
+          data.append("id_artesano", id_usuario); // o valor por defecto
+
+          const res = await fetch(`https://conecarte-ciq4.onrender.com/imagenes/${idTienda._id}`, {
+            method: "POST",
+            body: data
+          });
+
+          const json = await res.json();
+          imageData = json;
+        } catch (error) {
+          console.error("Error al subir la imagen:", error);
+        }
+      }
+
+      const nuevoProducto = {
+        ...formData,
+        image: imageData?.data || null
+      };
+
+      onGuardar(nuevoProducto);
       onHide();
     }
   };

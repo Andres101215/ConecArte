@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Table, Button, Modal, Form } from "react-bootstrap";
 import './FormAdmin.css';
 import { Link } from 'react-router-dom';
@@ -8,35 +8,39 @@ function ProductosAdmin() {
   const [productos, setProductos] = useState([]);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [vendedores, setVendedores] = useState([]);
+  const [imagen, setImagenPreview] = useState(null);
+
+  const handleImagenChange = async (e) => {
+
+    setImagenPreview(e.target.files[0]);
+
+  };
+
+
+  const obtenerTiendas = async () => {
+    try {
+      const response = await fetch("https://conecarte-8olx.onrender.com/vendedores/vendedores");
+      const data = await response.json();
+      setVendedores(data);
+    } catch (err) {
+      console.error("Error al obtener vendedores:", err);
+    }
+  };
+
+  const obtenerProductos = async () => {
+    try {
+      const response = await fetch("https://conecarte-8olx.onrender.com/productos/productos");
+      const data = await response.json();
+      setProductos(data);
+    } catch (err) {
+      console.error("Error al obtener productos:", err);
+    }
+  };
 
   useEffect(() => {
-    // Datos simulados
-    setProductos([
-      {
-        _id: "1",
-        id: "p001",
-        id_artesano: "art123",
-        nombre: "Jarrón artesanal",
-        descripcion: "Hecho a mano con barro colombiano",
-        precio: 25000,
-        cantidad: 10,
-        ubicacion: "Medellín",
-        fecha_creacion: "2024-03-15",
-        id_categoria: "ceramica"
-      },
-      {
-        _id: "2",
-        id: "p002",
-        id_artesano: "art456",
-        nombre: "Cuadro decorativo",
-        descripcion: "Pintura en acrílico sobre lienzo",
-        precio: 40000,
-        cantidad: 5,
-        ubicacion: "Bogotá",
-        fecha_creacion: "2024-01-22",
-        id_categoria: "pintura"
-      }
-    ]);
+    obtenerProductos();
+    obtenerTiendas();
   }, []);
 
   const abrirModal = (producto = null) => {
@@ -44,8 +48,6 @@ function ProductosAdmin() {
       setProductoSeleccionado({ ...producto });
     } else {
       setProductoSeleccionado({
-        _id: Date.now().toString(),
-        id: '',
         id_artesano: '',
         nombre: '',
         descripcion: '',
@@ -59,25 +61,111 @@ function ProductosAdmin() {
     setShowModal(true);
   };
 
-  const handleGuardar = () => {
-    setProductos((prev) => {
-      const existe = prev.find((p) => p._id === productoSeleccionado._id);
-      if (existe) {
-        return prev.map((p) =>
-          p._id === productoSeleccionado._id ? productoSeleccionado : p
-        );
-      } else {
-        return [...prev, productoSeleccionado];
-      }
-    });
-    setShowModal(false);
-  };
+  const handleGuardar = async () => {
+    try {
+      let imageData = productoSeleccionado.image;
 
-  const handleEliminar = (_id) => {
-    if (window.confirm("¿Deseas eliminar este producto?")) {
-      setProductos((prev) => prev.filter((p) => p._id !== _id));
+      // Si hay una nueva imagen y una imagen anterior, eliminar la anterior
+      if (imagen && productoSeleccionado?.image?.id) {
+        await fetch(`https://conecarte-ciq4.onrender.com/imagenes/${productoSeleccionado.image.id}`, {
+          method: "DELETE"
+        });
+      }
+
+      // Subir nueva imagen si hay
+      if (imagen) {
+        const data = new FormData();
+        data.append("image", imagen);
+        data.append("id_artesano", productoSeleccionado.id_artesano);
+
+        const res = await fetch(`https://conecarte-ciq4.onrender.com/imagenes/${productoSeleccionado.id_artesano}`, {
+          method: "POST",
+          body: data
+        });
+
+        const json = await res.json();
+        imageData = json?.data;
+      }
+
+      const esNuevo = !productoSeleccionado._id;
+      const url = `https://conecarte-8olx.onrender.com/productos/productos${esNuevo ? '' : `/${productoSeleccionado._id}`}`;
+      const metodo = esNuevo ? "POST" : "PUT";
+
+      const productoFinal = {
+        ...productoSeleccionado,
+        fecha_creacion: new Date(),
+        image: imageData
+      };
+
+      const response = await fetch(url, {
+        method: metodo,
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productoFinal),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error al ${esNuevo ? 'crear' : 'actualizar'} el producto`);
+      }
+
+      const productoGuardado = await response.json();
+
+      if (esNuevo && productoSeleccionado.id_artesano) {
+        await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/agregar-producto/${productoSeleccionado.id_artesano}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id_producto: productoGuardado._id
+          })
+        });
+      }
+
+      await obtenerProductos();
+      setShowModal(false);
+      setProductoSeleccionado(null);
+      setImagenPreview(null);
+
+    } catch (error) {
+      console.error("Error al guardar el producto:", error);
     }
   };
+
+
+
+  const handleEliminar = async (producto) => {
+    if (window.confirm("¿Deseas eliminar este producto?")) {
+      try {
+        // 1. Eliminar producto de la colección general
+        const response = await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${producto._id}`, {
+          method: "DELETE"
+        });
+
+        if (!response.ok) {
+          throw new Error("Error al eliminar el producto");
+        }
+
+        // 2. Quitar la referencia del producto en la tienda
+        await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/eliminar-producto/${producto.id_artesano}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id_producto: producto._id
+          })
+        });
+
+        await obtenerProductos();
+
+      } catch (error) {
+        console.error("Error al eliminar el producto:", error);
+      }
+    }
+  };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -86,6 +174,17 @@ function ProductosAdmin() {
       [name]: name === "precio" || name === "cantidad" ? parseInt(value) : value
     }));
   };
+
+  const esNuevoProducto = productoSeleccionado && !productoSeleccionado._id;
+
+
+  const mapaVendedores = useMemo(() => {
+    const map = {};
+    vendedores.forEach(v => {
+      map[v._id] = v.nombre_tienda;
+    });
+    return map;
+  }, [vendedores]);
 
   return (
     <div className="admin-overlay">
@@ -107,6 +206,7 @@ function ProductosAdmin() {
               <th>Fecha Creación</th>
               <th>ID Artesano</th>
               <th>Categoría</th>
+              <th>Imagen</th>
               <th>Acción</th>
             </tr>
           </thead>
@@ -119,8 +219,19 @@ function ProductosAdmin() {
                 <td>{producto.cantidad}</td>
                 <td>{producto.ubicacion}</td>
                 <td>{producto.fecha_creacion}</td>
-                <td>{producto.id_artesano}</td>
+                <td>{mapaVendedores[producto.id_artesano] || 'Desconocido'}</td>
                 <td>{producto.id_categoria}</td>
+                <td>
+                  {producto.image?.url ? (
+                    <img
+                      src={producto.image.url}
+                      alt={producto.nombre}
+                      style={{ width: "50px", height: "50px", objectFit: "cover" }}
+                    />
+                  ) : (
+                    "Sin imagen"
+                  )}
+                </td>
                 <td>
                   <Button
                     variant="warning"
@@ -133,7 +244,7 @@ function ProductosAdmin() {
                   <Button
                     variant="danger"
                     size="sm"
-                    onClick={() => handleEliminar(producto._id)}
+                    onClick={() => handleEliminar(producto)}
                   >
                     Eliminar
                   </Button>
@@ -153,15 +264,6 @@ function ProductosAdmin() {
           <Modal.Body>
             {productoSeleccionado && (
               <Form>
-                <Form.Group>
-                  <Form.Label>ID (custom)</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="id"
-                    value={productoSeleccionado.id}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
                 <Form.Group className="mt-2">
                   <Form.Label>Nombre</Form.Label>
                   <Form.Control
@@ -216,15 +318,23 @@ function ProductosAdmin() {
                     onChange={handleChange}
                   />
                 </Form.Group>
-                <Form.Group className="mt-2">
-                  <Form.Label>ID Artesano</Form.Label>
-                  <Form.Control
-                    type="text"
-                    name="id_artesano"
-                    value={productoSeleccionado.id_artesano}
-                    onChange={handleChange}
-                  />
-                </Form.Group>
+                {esNuevoProducto && (
+                  <Form.Group>
+                    <Form.Label>Seleccionar Tienda</Form.Label>
+                    <Form.Select
+                      name="id_artesano"
+                      value={productoSeleccionado.id_artesano || ''}
+                      onChange={handleChange}
+                    >
+                      <option value="">Selecciona una tienda...</option>
+                      {vendedores.map((usuario) => (
+                        <option key={usuario._id} value={usuario._id}>
+                          {usuario.nombre_tienda}
+                        </option>
+                      ))}
+                    </Form.Select>
+                  </Form.Group>
+                )}
                 <Form.Group className="mt-2">
                   <Form.Label>Categoría</Form.Label>
                   <Form.Control
@@ -234,6 +344,19 @@ function ProductosAdmin() {
                     onChange={handleChange}
                   />
                 </Form.Group>
+                <Form.Group className="mt-2">
+                    <Form.Label>Imagen del Producto</Form.Label>
+                    <Form.Control type="file" onChange={handleImagenChange} />
+                  </Form.Group>
+                  {(imagen || productoSeleccionado?.image?.url) && (
+                    <div className="text-center mt-2">
+                      <img
+                        src={imagen || productoSeleccionado.image.url}
+                        alt="Vista previa"
+                        style={{ width: "100px", height: "100px", objectFit: "cover" }}
+                      />
+                    </div>
+                  )}
               </Form>
             )}
           </Modal.Body>
