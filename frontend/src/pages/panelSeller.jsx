@@ -65,7 +65,6 @@ function PanelSeller() {
           ))}
         </div>
       </div>
-      <button className="btn btn-secondary mis-tiendas-btn" onClick={() => navigate("/mistiendas")}>Mis Tiendas</button>
       <button className="btn btn-primary buzon-btn" onClick={() => setShowBuzon(true)}>Buzón</button>
 
       {/* Modal Buzón */}

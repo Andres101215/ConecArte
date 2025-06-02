@@ -43,6 +43,9 @@ function Navbar() {
             {/* Usuario vendedor */}
             {user?.tipo_usuario === "vendedor" && (
               <>
+              <li className="nav-item">
+                  <Link className="nav-link" to="/mistiendas">Mis Tiendas</Link>
+                </li>
                 <li className="nav-item">
                   <Link className="nav-link" to="/register-seller">Registrar Tienda</Link>
                 </li>
