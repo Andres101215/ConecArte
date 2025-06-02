@@ -1,4 +1,11 @@
-useEffect(() => {
+import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+
+const WompiRespuesta = () => {
+  const [params] = useSearchParams();
+  const transactionId = params.get("id");
+
+  useEffect(() => {
   if (transactionId) {
     fetch(`https://conecarte-8olx.onrender.com/pagos/pagos/verificar`, {
       method: "POST",
@@ -36,3 +43,9 @@ useEffect(() => {
       .catch(err => console.error("Error al verificar transacción:", err.message));
   }
 }, [transactionId]);
+
+
+  return <h2>Procesando resultado de pago...</h2>;
+};
+
+export default WompiRespuesta;
