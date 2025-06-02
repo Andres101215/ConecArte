@@ -64,4 +64,19 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+router.get("/tiendas/:id_artesano", async (req, res) => {
+    try {
+        const { id_artesano } = req.params;
+        const vendedores = await Vendedor.find({ id_artesano: id_artesano });
+
+        if (vendedores.length === 0) {
+            return res.status(404).json({ mensaje: "No se encontraron tiendas para ese artesano" });
+        }
+
+        res.json(vendedores);
+    } catch (error) {
+        res.status(500).json({ mensaje: "Error al buscar tiendas por id_artesano", error });
+    }
+});
+
 module.exports = router;
