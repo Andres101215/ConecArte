@@ -56,10 +56,10 @@ function Perfil() {
   }
 
   return (
-    <div className="perfil-container">
-      <div className="overlay" style={{ paddingTop: '110px' }}>
-        <div className="card perfil-card shadow-lg mx-auto">
-          <div className="card-body text-center">
+    <div className="perfil-container" style={{ paddingTop: '120px' }}>
+      
+        <div className="card perfil-card shadow-lg mx-auto" >
+          <div className="card-body text-center" >
             <FaUserCircle size={100} className="text-secondary mb-4" />
             <h4 className="text-white">Perfil de Usuario</h4>
             <button
@@ -143,7 +143,7 @@ function Perfil() {
               </button>
             )}
           </div>
-        </div>
+        
       </div>
 
       <button

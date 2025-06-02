@@ -2,8 +2,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
 import './ProductoDetalle.css';
-import ModalBuzon from '../components/ModalBuzon';
-
 
 export default function ProductoDetalle() {
   const { id } = useParams();
@@ -13,35 +11,11 @@ export default function ProductoDetalle() {
   const [mensaje, setMensaje] = useState('');
   const [cantidad, setCantidad] = useState(1);
   const [mostrarModal, setMostrarModal] = useState(false);
-  const [showBuzon, setShowBuzon] = useState(false);
+  const [reseñas, setReseñas] = useState([]);
+  const [nuevaReseña, setNuevaReseña] = useState({ calificacion: 0, comentario: '' });
   const [actualizarReseñas, setActualizarReseñas] = useState(false);
 
-
-  const [reseñas, setReseñas] = useState([]);
-
-  const [nuevaReseña, setNuevaReseña] = useState({
-    calificacion: 0,
-    comentario: ''
-  });
-
   const id_usuario = localStorage.getItem('id_usuario');
-
-  const conversaciones = [
-    {
-      user: 'cliente_juan',
-      mensajes: [
-        { emisor: false, texto: 'Hola, estoy interesado en tu producto.' },
-        { emisor: true, texto: '¡Perfecto! ¿Cuál te gusta?' }
-      ]
-    },
-    {
-      user: 'comprador_maria',
-      mensajes: [
-        { emisor: true, texto: 'Hola, ¿necesitas ayuda?' },
-        { emisor: false, texto: 'Sí, ¿qué colores tienes?' }
-      ]
-    }
-  ];
 
   useEffect(() => {
     fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`)
@@ -49,11 +23,11 @@ export default function ProductoDetalle() {
       .then(data => setProducto(data))
       .catch(err => console.error(err));
 
-      fetch(`https://conecarte-8olx.onrender.com/resenas/resenas/producto/${id}`)
-    .then(res => res.json())
-    .then(data => setReseñas(data))
-    .catch(err => console.error(err));
-  }, [id , actualizarReseñas]);
+    fetch(`https://conecarte-8olx.onrender.com/resenas/resenas/producto/${id}`)
+      .then(res => res.json())
+      .then(data => setReseñas(data))
+      .catch(err => console.error(err));
+  }, [id, actualizarReseñas]);
 
   const añadirAlCarrito = async () => {
     if (!id_usuario) {
@@ -80,41 +54,43 @@ export default function ProductoDetalle() {
     }
   };
 
-const enviarReseña = async () => {
-  if (!id_usuario) {
-    setMensaje("Debes iniciar sesión para comentar.");
-    return;
-  }
-
-  try {
-    const res = await fetch("https://conecarte-8olx.onrender.com/resenas/resenas/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id_usuario,
-        id_producto: id,
-        calificacion: nuevaReseña.calificacion,
-        comentario: nuevaReseña.comentario
-      })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      setReseñas(prev => [...prev, { ...nuevaReseña, id_usuario, fecha: new Date().toISOString().split("T")[0] }]);
-      setNuevaReseña({ calificacion: 0, comentario: "" });
-      setMensaje("¡Reseña enviada con éxito!");
-       setActualizarReseñas(prev => !prev);
-    } else {
-      setMensaje(data.mensaje || "Error al enviar la reseña.");
+  const enviarReseña = async () => {
+    if (!id_usuario) {
+      setMensaje("Debes iniciar sesión para comentar.");
+      return;
     }
 
-  } catch (error) {
-    console.error(error);
-    setMensaje("Error de red al enviar la reseña.");
-  }
-};
+    try {
+      const res = await fetch("https://conecarte-8olx.onrender.com/resenas/resenas/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id_usuario,
+          id_producto: id,
+          calificacion: nuevaReseña.calificacion,
+          comentario: nuevaReseña.comentario
+        })
+      });
 
+      const data = await res.json();
+
+      if (res.ok) {
+        setReseñas(prev => [...prev, {
+          ...nuevaReseña,
+          id_usuario,
+          fecha: new Date().toISOString().split("T")[0]
+        }]);
+        setNuevaReseña({ calificacion: 0, comentario: "" });
+        setMensaje("¡Reseña enviada con éxito!");
+        setActualizarReseñas(prev => !prev);
+      } else {
+        setMensaje(data.mensaje || "Error al enviar la reseña.");
+      }
+    } catch (error) {
+      console.error(error);
+      setMensaje("Error de red al enviar la reseña.");
+    }
+  };
 
   if (!producto) {
     return (
@@ -187,7 +163,7 @@ const enviarReseña = async () => {
               <div className="modal-body">
                 {reseñas.map((r, index) => (
                   <div key={index} className="border-bottom pb-2 mb-2">
-                    <p><strong>{r.nombre_usuario}</strong> - {r.fecha}</p>
+                    <p><strong>{r.nombre_usuario || "Usuario"}</strong> - {r.fecha}</p>
                     <p>{'⭐'.repeat(r.calificacion)} ({r.calificacion}/5)</p>
                     <p>{r.comentario}</p>
                   </div>
@@ -232,22 +208,6 @@ const enviarReseña = async () => {
           </div>
         </div>
       )}
-
-      {/* Botón del buzón en la esquina inferior derecha */}
-      <button
-        className="btn btn-primary position-fixed"
-        style={{ bottom: '20px', right: '20px', zIndex: 1050 }}
-        onClick={() => setShowBuzon(true)}
-      >
-        Buzón
-      </button>
-
-      {/* Modal del Buzón */}
-      <ModalBuzon
-        show={showBuzon}
-        onHide={() => setShowBuzon(false)}
-        conversaciones={conversaciones}
-      />
     </div>
   );
 }

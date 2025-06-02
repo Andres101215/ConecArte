@@ -7,17 +7,17 @@
   background-attachment: fixed;
   padding-top: 80px; /* igual que .panel-user-fondo */
   overflow: hidden; /* ✅ Mantenlo si NO quieres scroll global */
+   z-index: 2; 
 }
 
 
-.overlay {
-  background-color: rgba(255, 255, 255, 0.85);
-  height: calc(100vh - 80px); /* Altura calculada sin navbar */
-  overflow-y: auto;           /* ✅ Scroll SOLO en esta capa */
-  padding: 120px 20px 40px 20px;
-  box-sizing: border-box;
+.perfil-container::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: -1; /* detrás del contenido, pero visible */
 }
-
 
 
 .perfil-card {
