@@ -31,7 +31,9 @@ function PanelUser() {
 
   return (
     <div className="panel-user-fondo">
-      
+      <div className="card-bienvenido">
+              <h1 className="text-white text-center mb-4">¡ Bienvenido !</h1>
+              </div>
         <div className="container mt-5" style={{ paddingTop: '50px' }}>
           <div className="grid-container">
             {productos.map((producto) => (
