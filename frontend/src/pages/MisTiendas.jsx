@@ -70,7 +70,7 @@ function MisTiendas() {
 
   return (
     <div className="mis-tiendas-background">
-      <div className="overlay">
+     
         <div className="container tienda-contenedor">
           <h2 className="text-white text-center mb-4">Mis Tiendas</h2>
           <div className="bg-white p-4 rounded shadow">
@@ -107,7 +107,7 @@ function MisTiendas() {
               </tbody>
             </Table>
           </div>
-        </div>
+        
       </div>
 
       {/* Modal de productos */}
