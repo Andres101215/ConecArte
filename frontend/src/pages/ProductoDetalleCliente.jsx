@@ -4,6 +4,7 @@ import { FaUserCircle } from 'react-icons/fa';
 import './ProductoDetalle.css';
 import ModalBuzon from '../components/ModalBuzon';
 
+
 export default function ProductoDetalle() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -13,6 +14,8 @@ export default function ProductoDetalle() {
   const [cantidad, setCantidad] = useState(1);
   const [mostrarModal, setMostrarModal] = useState(false);
   const [showBuzon, setShowBuzon] = useState(false);
+  const [actualizarReseñas, setActualizarReseñas] = useState(false);
+
 
   const [reseñas, setReseñas] = useState([]);
 
@@ -50,7 +53,7 @@ export default function ProductoDetalle() {
     .then(res => res.json())
     .then(data => setReseñas(data))
     .catch(err => console.error(err));
-  }, [id]);
+  }, [id , actualizarReseñas]);
 
   const añadirAlCarrito = async () => {
     if (!id_usuario) {
@@ -101,6 +104,7 @@ const enviarReseña = async () => {
       setReseñas(prev => [...prev, { ...nuevaReseña, id_usuario, fecha: new Date().toISOString().split("T")[0] }]);
       setNuevaReseña({ calificacion: 0, comentario: "" });
       setMensaje("¡Reseña enviada con éxito!");
+       setActualizarReseñas(prev => !prev);
     } else {
       setMensaje(data.mensaje || "Error al enviar la reseña.");
     }
@@ -183,7 +187,7 @@ const enviarReseña = async () => {
               <div className="modal-body">
                 {reseñas.map((r, index) => (
                   <div key={index} className="border-bottom pb-2 mb-2">
-                    <p><strong>{r.username}</strong> - {r.fecha}</p>
+                    <p><strong>{r.nombre_usuario}</strong> - {r.fecha}</p>
                     <p>{'⭐'.repeat(r.calificacion)} ({r.calificacion}/5)</p>
                     <p>{r.comentario}</p>
                   </div>

@@ -58,40 +58,6 @@ export default function ProductoDetalle() {
     }
   };
 
-const enviarReseña = async () => {
-  if (!id_usuario) {
-    setMensaje("Debes iniciar sesión para comentar.");
-    return;
-  }
-
-  try {
-    const res = await fetch("https://conecarte-8olx.onrender.com/resenas/resenas/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        id_usuario,
-        id_producto: id,
-        calificacion: nuevaReseña.calificacion,
-        comentario: nuevaReseña.comentario
-      })
-    });
-
-    const data = await res.json();
-
-    if (res.ok) {
-      setReseñas(prev => [...prev, { ...nuevaReseña, id_usuario, fecha: new Date().toISOString().split("T")[0] }]);
-      setNuevaReseña({ calificacion: 0, comentario: "" });
-      setMensaje("¡Reseña enviada con éxito!");
-    } else {
-      setMensaje(data.mensaje || "Error al enviar la reseña.");
-    }
-
-  } catch (error) {
-    console.error(error);
-    setMensaje("Error de red al enviar la reseña.");
-  }
-};
-
 
   if (!producto) return <div className="text-center mt-5"><div className="spinner-border text-primary" /></div>;
 
@@ -154,36 +120,12 @@ const enviarReseña = async () => {
               <div className="modal-body">
                 {reseñas.map((r, index) => (
                   <div key={index} className="border-bottom pb-2 mb-2">
-                    <p><strong>{r.id_usuario}</strong> - {r.fecha}</p>
+                    <p><strong>{r.nombre_usuario}</strong> - {r.fecha}</p>
                     <p>{"⭐".repeat(r.calificacion)} ({r.calificacion}/5)</p>
                     <p>{r.comentario}</p>
                   </div>
                 ))}
 
-                <h5 className="mt-4">Agregar Reseña</h5>
-                <div className="form-group mt-2">
-                  <label>Calificación (1 a 5):</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="5"
-                    className="form-control"
-                    value={nuevaReseña.calificacion}
-                    onChange={(e) => setNuevaReseña(prev => ({ ...prev, calificacion: parseInt(e.target.value) }))}
-                  />
-                </div>
-                <div className="form-group mt-2">
-                  <label>Comentario:</label>
-                  <textarea
-                    className="form-control"
-                    rows="3"
-                    value={nuevaReseña.comentario}
-                    onChange={(e) => setNuevaReseña(prev => ({ ...prev, comentario: e.target.value }))}
-                  />
-                </div>
-                <button className="btn btn-success mt-2" onClick={enviarReseña}>
-                  Enviar Reseña
-                </button>
               </div>
             </div>
           </div>
