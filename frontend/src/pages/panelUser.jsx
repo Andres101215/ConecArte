@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./panelUser.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FaShoppingCart } from 'react-icons/fa';
+import { FaShoppingCart, FaEnvelope } from 'react-icons/fa';
+
 import ModalBuzon from '../components/ModalBuzon';
 
 function PanelUser() {
@@ -79,12 +80,13 @@ function PanelUser() {
 
       {/* Botón del buzón */}
       <button
-        className="btn btn-primary position-fixed"
-        style={{ bottom: '90px', right: '20px', zIndex: 1050 }}
-        onClick={() => setShowBuzon(true)}
-      >
-        Buzón
-      </button>
+  className="btn btn-primary position-fixed d-flex align-items-center justify-content-center"
+  style={{ bottom: '90px', right: '20px', zIndex: 1050, width: '50px', height: '50px', borderRadius: '50%' }}
+  onClick={() => setShowBuzon(true)}
+  title="Buzón de mensajes"
+>
+  <FaEnvelope size={20} />
+</button>
 
       {/* Modal del buzón */}
       <ModalBuzon
