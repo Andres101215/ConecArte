@@ -68,7 +68,7 @@ export default function RegisterSeller() {
       className="register-background"
       style={{ backgroundImage: `url(${tiendaFondo})` }}
     >
-      <div className="overlay" style={{ paddingTop: '110px' }}>
+     
         <div className="container form-container p-4">
           <h2
             className="mb-4 text-center text-primary"
@@ -145,7 +145,7 @@ export default function RegisterSeller() {
             <button type="submit" className="btn btn-primary w-100">Registrar Tienda</button>
           </form>
         </div>
-      </div>
+      
     </div>
   );
 }
