@@ -42,11 +42,20 @@ function MisTiendas() {
       let response = await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/productos/${tienda._id}`);
       let productos = await response.json();
 
-      if (!Array.isArray(productos)) {
-        productos = []; // Asegura que productos sea un arreglo
+      let dataProductos = [];
+
+      for (const id of productos.productos) {
+        console.log("ID del producto:", id);
+        try {
+          const response = await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`);
+          const productoData = await response.json();
+          dataProductos.push(productoData);
+        } catch (error) {
+          console.error('Error al obtener el producto:', error);
+        }
       }
 
-      setProductosTienda(productos);
+      setProductosTienda(dataProductos);
       setNombreTienda(tienda.nombre_tienda);
       setTiendaSeleccionada(tienda);
       setShowModal(true); // Siempre mostramos el modal, aunque esté vacío

@@ -38,7 +38,7 @@ const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refre
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
-          productos_ids: productoCreado._id
+          id_producto: productoCreado._id
         })
       });
 
