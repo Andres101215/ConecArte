@@ -39,20 +39,24 @@ function MisTiendas() {
 
   const handleVerProductos = async (tienda) => {
     try {
-      const response = await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/productos/${tienda._id}`);
-      const productos = await response.json();
+      let response = await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/productos/${tienda._id}`);
+      let productos = await response.json();
 
       if (!Array.isArray(productos)) {
-        throw new Error("La respuesta no es un array de productos");
+        productos = []; // Asegura que productos sea un arreglo
       }
 
       setProductosTienda(productos);
       setNombreTienda(tienda.nombre_tienda);
-      setShowModal(true);
+      setShowModal(true); // Siempre mostramos el modal, aunque esté vacío
     } catch (error) {
       console.error('Error al obtener los productos de la tienda:', error);
+      setProductosTienda([]); // También limpiamos en caso de error
+      setNombreTienda(tienda.nombre_tienda); // Aun así, mostramos el nombre de tienda
+      setShowModal(true); // Y mostramos el modal vacío con mensaje de "sin productos"
     }
   };
+
 
 
   return (
