@@ -1,5 +1,6 @@
 const express = require("express");
 const Producto = require("../models/Producto");
+const Tienda = require("../models/Vendedor"); // Asegúrate de que este modelo esté correctamente importado
 
 const router = express.Router();
 
@@ -51,19 +52,27 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// Eliminar un producto por ID (DELETE)
 router.delete("/:id", async (req, res) => {
-    try {
-        const productoEliminado = await Producto.findByIdAndDelete(req.params.id);
-        if (!productoEliminado) {
-            return res.status(404).json({ mensaje: "Producto no encontrado" });
-        }
-        res.json({ mensaje: "Producto eliminado" });
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al eliminar el producto", error });
-    }
-});
+  try {
+    const idProducto = req.params.id;
 
+    // Elimina el producto
+    const productoEliminado = await Producto.findByIdAndDelete(idProducto);
+    if (!productoEliminado) {
+      return res.status(404).json({ mensaje: "Producto no encontrado" });
+    }
+
+    // Quitar el ID del producto de todas las tiendas que lo tengan
+    await Tienda.updateMany(
+      { id_productos: idProducto },
+      { $pull: { id_productos: idProducto } }
+    );
+
+    res.json({ mensaje: "Producto eliminado y eliminado de las tiendas asociadas" });
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al eliminar el producto", error });
+  }
+});
 
 router.post("/detalles", async (req, res) => {
   try {
