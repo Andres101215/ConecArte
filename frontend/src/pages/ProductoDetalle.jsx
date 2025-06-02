@@ -11,10 +11,7 @@ export default function ProductoDetalle() {
   const [cantidad, setCantidad] = useState(1);
   const [mostrarModal, setMostrarModal] = useState(false);
 
-  const [reseñas, setReseñas] = useState([
-    { id_usuario: "usuario1", calificacion: 5, comentario: "¡Excelente producto!", fecha: "2024-05-01" },
-    { id_usuario: "usuario2", calificacion: 4, comentario: "Muy bonito, volvería a comprar", fecha: "2024-05-10" }
-  ]);
+  const [reseñas, setReseñas] = useState([]);
 
   const [nuevaReseña, setNuevaReseña] = useState({
     calificacion: 0,

@@ -14,20 +14,7 @@ export default function ProductoDetalle() {
   const [mostrarModal, setMostrarModal] = useState(false);
   const [showBuzon, setShowBuzon] = useState(false);
 
-  const [reseñas, setReseñas] = useState([
-    {
-      id_usuario: 'usuario1',
-      calificacion: 5,
-      comentario: '¡Excelente producto!',
-      fecha: '2024-05-01'
-    },
-    {
-      id_usuario: 'usuario2',
-      calificacion: 4,
-      comentario: 'Muy bonito, volvería a comprar',
-      fecha: '2024-05-10'
-    }
-  ]);
+  const [reseñas, setReseñas] = useState([]);
 
   const [nuevaReseña, setNuevaReseña] = useState({
     calificacion: 0,
@@ -58,6 +45,11 @@ export default function ProductoDetalle() {
       .then(res => res.json())
       .then(data => setProducto(data))
       .catch(err => console.error(err));
+
+      fetch(`https://conecarte-8olx.onrender.com/resenas/resenas/producto/${id}`)
+    .then(res => res.json())
+    .then(data => setReseñas(data))
+    .catch(err => console.error(err));
   }, [id]);
 
   const añadirAlCarrito = async () => {
@@ -85,21 +77,40 @@ export default function ProductoDetalle() {
     }
   };
 
-  const enviarReseña = () => {
-    if (!id_usuario) {
-      setMensaje('Debes iniciar sesión para comentar.');
-      return;
+const enviarReseña = async () => {
+  if (!id_usuario) {
+    setMensaje("Debes iniciar sesión para comentar.");
+    return;
+  }
+
+  try {
+    const res = await fetch("https://conecarte-8olx.onrender.com/resenas/resenas/", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id_usuario,
+        id_producto: id,
+        calificacion: nuevaReseña.calificacion,
+        comentario: nuevaReseña.comentario
+      })
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setReseñas(prev => [...prev, { ...nuevaReseña, id_usuario, fecha: new Date().toISOString().split("T")[0] }]);
+      setNuevaReseña({ calificacion: 0, comentario: "" });
+      setMensaje("¡Reseña enviada con éxito!");
+    } else {
+      setMensaje(data.mensaje || "Error al enviar la reseña.");
     }
 
-    const reseñaLocal = {
-      ...nuevaReseña,
-      id_usuario: 'usuarioActual', // Reemplazar con el nombre real si se tiene
-      fecha: new Date().toISOString().split('T')[0]
-    };
+  } catch (error) {
+    console.error(error);
+    setMensaje("Error de red al enviar la reseña.");
+  }
+};
 
-    setReseñas(prev => [...prev, reseñaLocal]);
-    setNuevaReseña({ calificacion: 0, comentario: '' });
-  };
 
   if (!producto) {
     return (
@@ -172,7 +183,7 @@ export default function ProductoDetalle() {
               <div className="modal-body">
                 {reseñas.map((r, index) => (
                   <div key={index} className="border-bottom pb-2 mb-2">
-                    <p><strong>{r.id_usuario}</strong> - {r.fecha}</p>
+                    <p><strong>{r.username}</strong> - {r.fecha}</p>
                     <p>{'⭐'.repeat(r.calificacion)} ({r.calificacion}/5)</p>
                     <p>{r.comentario}</p>
                   </div>

@@ -1,6 +1,6 @@
 const express = require("express");
 const Resena = require("../models/Resena");
-
+const axios = require('axios');
 const router = express.Router();
 
 
@@ -69,14 +69,28 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+
+
 router.get("/producto/:id", async (req, res) => {
   try {
     const reseñas = await Resena.find({ id_producto: req.params.id });
-    res.json(reseñas);
+
+    const reseñasConNombre = await Promise.all(reseñas.map(async (r) => {
+      try {
+        const respuesta = await axios.get(`https://conecarte-8olx.onrender.com/usuarios/usuarios/${r.id_usuario}`);
+        const username = respuesta.data.username;
+        return { ...r._doc, nombre_usuario: username };
+      } catch (e) {
+        return { ...r._doc, nombre_usuario: "Usuario desconocido" };
+      }
+    }));
+
+    res.json(reseñasConNombre);
   } catch (error) {
     res.status(500).json({ mensaje: "Error al obtener reseñas" });
   }
 });
+
 
 
 module.exports = router;
