@@ -18,7 +18,7 @@ const WompiRespuesta = () => {
 
         if (data.status === "APPROVED") {
           // Aquí creas la factura
-          fetch(`https://conecarte-8olx.onrender.com/facturas/facturas`, {
+          fetch(`https://conecarte-8olx.onrender.com/facturas/facturas/facturar`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
