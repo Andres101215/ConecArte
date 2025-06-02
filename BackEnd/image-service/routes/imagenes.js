@@ -36,8 +36,8 @@ router.post("/:id", async (req, res) => {
     }
 });
 
-router.delete("/:id", async (req, res) => {
-    const publicId = req.params.id;
+router.delete("/:id/:id2", async (req, res) => {
+    const publicId = req.params.id+"/"+req.params.id2;
 
     try {
         await deleteImage(publicId);
