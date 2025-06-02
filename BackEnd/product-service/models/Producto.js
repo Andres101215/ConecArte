@@ -9,7 +9,11 @@ const productoSchema = new mongoose.Schema({
     cantidad: Number,
     ubicacion: String,
     fecha_creacion: Date,
-    id_categoria: String
+    id_categoria: String,
+    image:{
+        id: String, // ID de la imagen en Cloudinary
+        url: String // URL de la imagen en Cloudinary
+    }
 }, { collection: "Producto" }); // Forzamos el nombre de la colección
 
 const Producto = mongoose.model("Producto", productoSchema); // El primer parámetro no afecta la colección en la BD

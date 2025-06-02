@@ -1,4 +1,7 @@
 const express = require("express");
+const axios = require("axios");
+const fs = require("fs-extra");
+const FormData = require("form-data");
 const Producto = require("../models/Producto");
 const Tienda = require("../models/Vendedor"); // Asegúrate de que este modelo esté correctamente importado
 
@@ -30,13 +33,47 @@ router.get("/:id", async (req, res) => {
 
 // Crear un nuevo producto (POST)
 router.post("/", async (req, res) => {
-    try {
-        const nuevoProducto = new Producto(req.body);
-        await nuevoProducto.save();
-        res.status(201).json(nuevoProducto);
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al crear el producto", error });
+  try {
+    const { id_artesano } = req.body;
+
+    if (!req.files || !req.files.image) {
+      return res.status(400).json({ mensaje: "No se recibió ninguna imagen" });
     }
+
+    // Guardar temporalmente la imagen
+    const imageFile = req.files.image;
+    const tempPath = imageFile.tempFilePath;
+
+    // Preparar el form-data para enviar al microservicio de imágenes
+    const form = new FormData();
+    form.append("image", fs.createReadStream(tempPath));
+
+    // Subir imagen al microservicio de imágenes
+    const response = await axios.post(
+      `http://localhost:5000/imagenes/${id_artesano}`,
+      form,
+      { headers: form.getHeaders() }
+    );
+
+    const imageInfo = response.data.data; // { id, url }
+
+    // Crear el nuevo producto incluyendo la imagen
+    const nuevoProducto = new Producto({
+      ...req.body,
+      image: imageInfo,
+      fecha_creacion: new Date(),
+    });
+
+    await nuevoProducto.save();
+
+    // Eliminar archivo temporal si existe
+    await fs.unlink(tempPath);
+
+    res.status(201).json(nuevoProducto);
+  } catch (error) {
+    console.error("Error al crear producto:", error.message);
+    res.status(500).json({ mensaje: "Error al crear el producto", error });
+  }
 });
 
 // Actualizar un producto por ID (PUT)
@@ -56,6 +93,24 @@ router.delete("/:id/:id_vendedor", async (req, res) => {
   try {
     const idProducto = req.params.id;
     const id = req.params.id_vendedor;
+
+    // Buscar el producto para obtener el public_id de la imagen
+    const producto = await Producto.findById(idProducto);
+    if (!producto) {
+      return res.status(404).json({ mensaje: "Producto no encontrado" });
+    }
+
+    const publicIdImagen = producto.image?.id;
+
+    // Eliminar la imagen desde el microservicio
+    if (publicIdImagen) {
+      try {
+        await axios.delete(`http://localhost:5000/imagenes/${publicIdImagen}`);
+        console.log("Imagen eliminada correctamente");
+      } catch (error) {
+        console.error("Error al eliminar la imagen:", error.message);
+      }
+    }
 
     // Elimina el producto
     const productoEliminado = await Producto.findByIdAndDelete(idProducto);

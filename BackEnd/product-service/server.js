@@ -1,4 +1,5 @@
 require("dotenv").config();
+const fileUpload = require("express-fileupload");
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
@@ -7,6 +8,7 @@ const app = express();
 
 //Middlewares
 app.use(cors());
+app.use(fileUpload({ useTempFiles: true, tempFileDir: './uploads/' }));
 app.use(express.json());
 
 //Conectar a MongoDB Atlas
