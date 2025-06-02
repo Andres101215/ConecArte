@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Modal, Button, Form, Table } from 'react-bootstrap';
 import './FormAdmin.css';
+import { Link } from 'react-router-dom';
+import { FaHome } from 'react-icons/fa';
 
 function UsuariosAdmin() {
   const [usuarios, setUsuarios] = useState([
@@ -166,6 +168,10 @@ function UsuariosAdmin() {
           <Button variant="primary" onClick={guardarCambios}>Guardar</Button>
         </Modal.Footer>
       </Modal>
+      {/* Botón flotante de inicio */}
+      <Link to="/panelAdmin" className="btn-home-float" title="Volver al inicio">
+        <FaHome size={24} />
+      </Link>
     </div>
   );
 }

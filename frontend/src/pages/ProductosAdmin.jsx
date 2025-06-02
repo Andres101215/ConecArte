@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Table, Button, Modal, Form } from "react-bootstrap";
 import './FormAdmin.css';
+import { Link } from 'react-router-dom';
+import { FaHome } from 'react-icons/fa';
 
 function ProductosAdmin() {
   const [productos, setProductos] = useState([]);
@@ -245,6 +247,10 @@ function ProductosAdmin() {
           </Modal.Footer>
         </Modal>
       </div>
+      {/* Botón flotante de inicio */}
+            <Link to="/panelAdmin" className="btn-home-float" title="Volver al inicio">
+              <FaHome size={24} />
+            </Link>
     </div>
   );
 }
