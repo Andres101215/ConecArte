@@ -1,168 +1,133 @@
-import React, { useState, useEffect } from "react";
-import { Modal, Button, Form } from "react-bootstrap";
+import React, { useState } from "react";
+import { Modal, Button, Table } from "react-bootstrap";
+import { PencilFill, TrashFill, Plus } from "react-bootstrap-icons";
+import ModalFormularioProducto from "./ModalFormularioProducto";
 
-const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicion, idTienda }) => {
-  const [nombre, setNombre] = useState("");
-  const [descripcion, setDescripcion] = useState("");
-  const [precio, setPrecio] = useState("");
-  const [cantidad, setCantidad] = useState("");
-  const [ubicacion, setUbicacion] = useState("");
-  const [idCategoria, setIdCategoria] = useState("");
-  const [validated, setValidated] = useState(false);
+const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refrescarProductos }) => {
+  const [showFormModal, setShowFormModal] = useState(false);
+  const [modoEdicion, setModoEdicion] = useState(false);
+  const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
-  const id_artesano = localStorage.getItem("id_usuario");
+  const handleAbrirFormulario = (producto = null) => {
+    setModoEdicion(!!producto);
+    setProductoSeleccionado(producto);
+    setShowFormModal(true);
+  };
 
-  useEffect(() => {
-    if (modoEdicion && producto) {
-      setNombre(producto.nombre || "");
-      setDescripcion(producto.descripcion || "");
-      setPrecio(producto.precio || "");
-      setCantidad(producto.cantidad || "");
-      setUbicacion(producto.ubicacion || "");
-      setIdCategoria(producto.id_categoria || "");
-    } else {
-      setNombre("");
-      setDescripcion("");
-      setPrecio("");
-      setCantidad("");
-      setUbicacion("");
-      setIdCategoria("");
-    }
-  }, [producto, modoEdicion]);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setValidated(true);
-
-    if (e.currentTarget.checkValidity() === false) return;
-
-    const nuevoProducto = {
-      id_artesano,
-      nombre,
-      descripcion,
-      precio: parseFloat(precio),
-      cantidad: parseInt(cantidad),
-      ubicacion,
-      fecha_creacion: new Date().toISOString(),
-      id_categoria: idCategoria
-    };
-
+  const handleGuardarProducto = async (nuevoProducto) => {
     try {
-      const url = modoEdicion
-        ? `https://conecarte-8olx.onrender.com/vendedores/vendedores/productos/${producto._id}`
-        : `https://conecarte-8olx.onrender.com/productos/productos/`;
-
-      const method = modoEdicion ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(nuevoProducto),
+      // 1. Guardar producto en la colección
+      const response = await fetch("https://conecarte-8olx.onrender.com/productos/productos", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(nuevoProducto)
       });
 
-      if (!response.ok) throw new Error("Error al guardar el producto");
+      const productoCreado = await response.json();
 
-      const data = await response.json();
-      onGuardar(data);
-      onHide();
-      if (!modoEdicion && idTienda && data._id) {
-        await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/agregar-producto/${idTienda}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ id_producto: data._id })
-        });
-      }
+      const id = idTienda._id
+
+      console.log("idTienda:", idTienda);
+
+      // 2. Asociar el producto a la tienda
+      await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/agregar-producto/`+id, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          productos_ids: productoCreado._id
+        })
+      });
+
+      // 3. Actualizar lista de productos
+      refrescarProductos();
+
     } catch (error) {
       console.error("Error al guardar el producto:", error);
-      alert("Hubo un error al guardar el producto.");
     }
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>{modoEdicion ? "Editar Producto" : "Nuevo Producto"}</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Nombre del producto"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              required
-            />
-            <Form.Control.Feedback type="invalid">Nombre requerido</Form.Control.Feedback>
-          </Form.Group>
+    <>
+      <Modal show={show} onHide={onHide} centered size="xl">
+        <Modal.Header closeButton>
+          <Modal.Title>Productos de {nombreTienda}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Table bordered hover responsive className="text-center align-middle">
+            <thead className="table-secondary">
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Ubicación</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              {productos.length === 0 ? (
+                <tr>
+                  <td colSpan="7">No hay productos registrados para esta tienda.</td>
+                </tr>
+              ) : (
+                productos.map((producto, index) => (
+                  <tr key={producto._id || index}>
+                    <td>{index + 1}</td>
+                    <td>{producto.nombre}</td>
+                    <td>{producto.descripcion}</td>
+                    <td>${parseFloat(producto.precio).toFixed(2)}</td>
+                    <td>{producto.cantidad}</td>
+                    <td>{producto.ubicacion}</td>
+                    <td>
+                      <Button
+                        variant="outline-warning"
+                        size="sm"
+                        className="me-2"
+                        onClick={() => handleAbrirFormulario(producto)}
+                      >
+                        <PencilFill />
+                      </Button>
+                      <Button variant="outline-danger" size="sm">
+                        <TrashFill />
+                      </Button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </Table>
+        </Modal.Body>
+        <Button
+          variant="primary"
+          className="rounded-circle position-absolute"
+          style={{
+            bottom: '20px',
+            right: '20px',
+            width: '50px',
+            height: '50px',
+            padding: '0',
+          }}
+          onClick={() => handleAbrirFormulario()}
+        >
+          <Plus size={24} />
+        </Button>
+      </Modal>
 
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Descripción"
-              value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-              required
-            />
-            <Form.Control.Feedback type="invalid">Descripción requerida</Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="number"
-              placeholder="Precio"
-              value={precio}
-              onChange={(e) => setPrecio(e.target.value)}
-              required
-              min={0}
-              step="0.01"
-            />
-            <Form.Control.Feedback type="invalid">Precio válido requerido</Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="number"
-              placeholder="Cantidad"
-              value={cantidad}
-              onChange={(e) => setCantidad(e.target.value)}
-              required
-              min={0}
-            />
-            <Form.Control.Feedback type="invalid">Cantidad válida requerida</Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="Ubicación"
-              value={ubicacion}
-              onChange={(e) => setUbicacion(e.target.value)}
-              required
-            />
-            <Form.Control.Feedback type="invalid">Ubicación requerida</Form.Control.Feedback>
-          </Form.Group>
-
-          <Form.Group className="mb-3">
-            <Form.Control
-              type="text"
-              placeholder="ID de la categoría"
-              value={idCategoria}
-              onChange={(e) => setIdCategoria(e.target.value)}
-              required
-            />
-            <Form.Control.Feedback type="invalid">ID de categoría requerido</Form.Control.Feedback>
-          </Form.Group>
-
-          <Button type="submit" variant="primary" className="w-100">
-            {modoEdicion ? "Guardar Cambios" : "Agregar Producto"}
-          </Button>
-        </Form>
-      </Modal.Body>
-    </Modal>
+      <ModalFormularioProducto
+        show={showFormModal}
+        onHide={() => setShowFormModal(false)}
+        onGuardar={handleGuardarProducto}
+        producto={productoSeleccionado}
+        modoEdicion={modoEdicion}
+        idTienda={idTienda}
+      />
+    </>
   );
 };
 
-export default ModalFormularioProducto;
+export default ModalProductos;
