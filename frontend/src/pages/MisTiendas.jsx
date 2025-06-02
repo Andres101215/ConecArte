@@ -4,39 +4,28 @@ import { EyeFill } from "react-bootstrap-icons";
 import './MisTiendas.css';
 import ModalProductos from "../components/ModalProductos";
 
+const id_usuario = localStorage.getItem("id_usuario");
+
 function MisTiendas() {
   const [tiendas, setTiendas] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [productosTienda, setProductosTienda] = useState([]);
   const [nombreTienda, setNombreTienda] = useState("");
 
-  useEffect(() => {
-    const tiendasSimuladas = [
-      {
-        _id: "1",
-        nombre_tienda: "Arte Andino",
-        descripcion_tienda: "Tienda de artesanías hechas a mano",
-        categorias: ["textil", "cerámica"],
-        experiencia: 5,
-        redes_sociales: ["@arteandino"],
-        productos: "tejidos, jarrones",
-        fecha_registro: "2022-03-01",
-        id_usuario: "u001"
-      },
-      {
-        _id: "2",
-        nombre_tienda: "Conexión Natural",
-        descripcion_tienda: "Productos ecológicos y sostenibles",
-        categorias: ["ecológico", "hogar"],
-        experiencia: 3,
-        redes_sociales: ["@conexionnatural"],
-        productos: "velas, jabones",
-        fecha_registro: "2023-01-15",
-        id_usuario: "u002"
-      }
-    ];
-    setTiendas(tiendasSimuladas);
-  }, []);
+useEffect(() => {
+  const obtenerTiendas = async () => {
+    try {
+      const response = await fetch('https://conecarte-8olx.onrender.com/vendedores/vendedores/tiendas/' + id_usuario);
+      const data = await response.json();
+      setTiendas(data);
+    } catch (error) {
+      console.error('Error al obtener las tiendas:', error);
+    }
+  };
+
+  obtenerTiendas();
+}, []);
+
 
   const handleVerProductos = (tienda) => {
     // Simulación de productos con la estructura del esquema Producto
