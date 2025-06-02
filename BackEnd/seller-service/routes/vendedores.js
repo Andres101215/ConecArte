@@ -93,4 +93,20 @@ router.get("/productos/:id", async (req, res) => {
     }
 });
 
+router.put('/agregar-producto/:id_tienda', async (req, res) => {
+  try {
+    const { id_producto } = req.body;
+    const tienda = await Tienda.findById(req.params.id_tienda);
+    
+    if (!tienda) return res.status(404).send("Tienda no encontrada");
+
+    tienda.id_productos.push(id_producto);
+    await tienda.save();
+
+    res.status(200).json({ mensaje: "Producto agregado a la tienda", tienda });
+  } catch (error) {
+    res.status(500).json({ error: "Error al actualizar la tienda", detalles: error });
+  }
+});
+
 module.exports = router;
