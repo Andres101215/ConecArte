@@ -81,7 +81,7 @@ router.get("/tiendas/:id_artesano", async (req, res) => {
 
 router.get("/productos/:id", async (req, res) => {
     try {
-        const vendedor = await Vendedor.findById(req.params.id).populate("productos_ids");
+        const vendedor = await Vendedor.findById(req.params.id);
 
         if (!vendedor) {
             return res.status(404).json({ mensaje: "Vendedor no encontrado" });
