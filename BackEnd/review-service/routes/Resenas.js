@@ -71,7 +71,7 @@ router.delete("/:id", async (req, res) => {
 
 router.get("/producto/:id", async (req, res) => {
   try {
-    const reseñas = await Reseña.find({ id_producto: req.params.id });
+    const reseñas = await Resena.find({ id_producto: req.params.id });
     res.json(reseñas);
   } catch (error) {
     res.status(500).json({ mensaje: "Error al obtener reseñas" });
