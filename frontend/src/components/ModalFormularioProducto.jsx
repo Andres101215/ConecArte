@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Modal, Button, Form } from "react-bootstrap";
 
-const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicion }) => {
+const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicion, refrescarProductos}) => {
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
@@ -39,9 +39,36 @@ const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicio
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async() => {
+    if (!modoEdicion) {
+      console.log("Guardando nuevo producto:");
+      // Aquí podrías agregar la lógica para editar un product
     onGuardar(formData);
     onHide(); // cerrar modal luego de guardar
+    }
+    else {
+      console.log("Editando producto existente:");
+      const id = producto._id
+      console.log("ID del producto a editar:", id);
+      await fetch("https://conecarte-8olx.onrender.com/productos/productos/"+id, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            id_artesano: producto.id_artesano,
+            nombre: formData.nombre,
+            descripcion: formData.descripcion,
+            precio: parseFloat(formData.precio),
+            cantidad: parseInt(formData.cantidad),
+            ubicacion: formData.ubicacion,
+            fecha_creacion: new Date(), // O puedes dejar la original si no cambia
+            id_categoria: formData.id_categoria
+          })
+        });
+    refrescarProductos(); // Actualizar la lista de productos
+    onHide(); // cerrar modal luego de guardar
+    }
   };
 
   return (

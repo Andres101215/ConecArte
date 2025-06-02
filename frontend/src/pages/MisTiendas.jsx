@@ -45,7 +45,6 @@ function MisTiendas() {
       let dataProductos = [];
 
       for (const id of productos.productos) {
-        console.log("ID del producto:", id);
         try {
           const response = await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`);
           const productoData = await response.json();

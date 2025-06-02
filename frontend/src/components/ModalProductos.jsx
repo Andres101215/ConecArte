@@ -8,7 +8,7 @@ const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refre
   const [modoEdicion, setModoEdicion] = useState(false);
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
 
-  const handleAbrirFormulario = (producto = null) => {
+  const handleAbrirFormulario = (producto) => {
     setModoEdicion(!!producto);
     setProductoSeleccionado(producto);
     setShowFormModal(true);
@@ -47,6 +47,22 @@ const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refre
 
     } catch (error) {
       console.error("Error al guardar el producto:", error);
+    }
+  };
+  const handleBorrar = async (producto) => {
+    try {
+      const response = await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${producto._id}/${idTienda._id}`, {
+        method: "DELETE"
+      });
+
+      const data = await response.json();
+      console.log("Producto eliminado:", data);
+
+      refrescarProductos();
+
+      // Aquí podrías actualizar el estado para que desaparezca de la vista
+    } catch (error) {
+      console.error("Error al eliminar el producto:", error);
     }
   };
 
@@ -92,7 +108,7 @@ const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refre
                       >
                         <PencilFill />
                       </Button>
-                      <Button variant="outline-danger" size="sm">
+                      <Button variant="outline-danger" size="sm" onClick={() => handleBorrar(producto)}>
                         <TrashFill />
                       </Button>
                     </td>
@@ -121,10 +137,10 @@ const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refre
       <ModalFormularioProducto
         show={showFormModal}
         onHide={() => setShowFormModal(false)}
+        refrescarProductos={refrescarProductos}
         onGuardar={handleGuardarProducto}
         producto={productoSeleccionado}
         modoEdicion={modoEdicion}
-        idTienda={idTienda}
       />
     </>
   );
