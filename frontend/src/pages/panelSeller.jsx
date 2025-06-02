@@ -28,20 +28,54 @@ function PanelSeller() {
 
   const navigate = useNavigate();
 
+  const id_usuario = localStorage.getItem("id_usuario");
+
   useEffect(() => {
-    fetch("https://conecarte-8olx.onrender.com/productos/productos")
-      .then((res) => {
-        if (!res.ok) throw new Error("Error al obtener productos");
-        return res.json();
-      })
-      .then((data) => {
-        setProductos(data);
-        setCargando(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setCargando(false);
-      });
+    const obtenerTiendas = async () => {
+      try {
+        const response = await fetch('https://conecarte-8olx.onrender.com/vendedores/vendedores/tiendas/' + id_usuario);
+        const data = await response.json();
+
+        console.log("Respuesta del backend:", data);
+
+        if (Array.isArray(data)) {
+          for (const tienda of data) {
+
+            try {
+              let response = await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/productos/${tienda._id}`);
+              let productos = await response.json();
+
+              let dataProductos = [];
+
+              for (const id of productos.productos) {
+                try {
+                  const response = await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`);
+                  const productoData = await response.json();
+                  dataProductos.push(productoData);
+                } catch (error) {
+                  console.error('Error al obtener el producto:', error);
+                }
+              }
+
+              setProductos(dataProductos);
+              setCargando(false);
+            } catch (error) {
+              console.error('Error al obtener los productos de la tienda:', error);
+              setCargando(false);
+            }
+          }
+        } else {
+          setProductos([]); // o puedes mostrar un mensaje "sin tiendas"
+          console.warn("La respuesta no fue un arreglo:", data);
+        }
+      } catch (error) {
+        console.error('Error al obtener las tiendas:', error);
+        setProductos([]); // previene que sea undefined en caso de error
+      }
+    };
+
+    obtenerTiendas();
+  
   }, []);
 
   if (cargando) return <p className="text-center mt-5 text-white">Cargando productos...</p>;
