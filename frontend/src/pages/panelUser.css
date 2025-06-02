@@ -1,6 +1,6 @@
 .panel-user-fondo {
   position: relative; /* Necesario para que ::before funcione correctamente */
-  background-image: url('../assets/pendiente1.webp');
+  background-image: url('../assets/leopard.png');
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
