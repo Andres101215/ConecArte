@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FaUserCircle } from 'react-icons/fa';
+import { FaShoppingCart, FaEnvelope } from 'react-icons/fa';
 import './ProductoDetalle.css';
 
 export default function ProductoDetalle() {
