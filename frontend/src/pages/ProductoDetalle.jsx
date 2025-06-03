@@ -26,10 +26,10 @@ export default function ProductoDetalle() {
       .then(data => setProducto(data))
       .catch(err => console.error(err));
 
-      fetch(`https://conecarte-8olx.onrender.com/resenas/resenas/producto/${id}`)
-    .then(res => res.json())
-    .then(data => setReseñas(data))
-    .catch(err => console.error(err));
+    fetch(`https://conecarte-8olx.onrender.com/resenas/resenas/producto/${id}`)
+      .then(res => res.json())
+      .then(data => setReseñas(data))
+      .catch(err => console.error(err));
   }, [id]);
 
   const añadirAlCarrito = async () => {
@@ -99,11 +99,11 @@ export default function ProductoDetalle() {
           </div>
 
           <button
-            className="btn btn-secondary perfil-float-button"
-            onClick={() => navigate("/perfil")}
-            title="Ir al perfil"
+            className="btn btn-warning carrito-flotante"
+            onClick={() => navigate("/pasarela")}
+            style={{ zIndex: 1050 }}
           >
-            <FaUserCircle size={24} />
+            <FaShoppingCart size={24} />
           </button>
         </div>
       </div>
