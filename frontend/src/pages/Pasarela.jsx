@@ -73,7 +73,7 @@ function CarritoUsuario() {
                   >
                     ×
                   </button>
-                  <img src={producto.imagen} alt={producto.nombre} />
+                  <img src={producto.image?.url} alt={producto.nombre} />
                   <div className="card-body">
                     <h5 className="card-title">{producto.nombre}</h5>
                     <p className="card-text">{producto.descripcion}</p>
