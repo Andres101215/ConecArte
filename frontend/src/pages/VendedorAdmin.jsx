@@ -116,7 +116,7 @@ function VendedorAdmin() {
         <div className="d-flex justify-content-between align-items-center mb-3">
           <h2 className="admin-title">Gestión de Tiendas</h2>
           <Button variant="success" onClick={abrirModalNuevo}>
-            + Agregar Vendedor
+            + Agregar Tienda
           </Button>
         </div>
 
@@ -163,7 +163,7 @@ function VendedorAdmin() {
       <Modal show={showModal} onHide={() => setShowModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>
-            {vendedorEditando?.nombre_tienda ? 'Editar Vendedor' : 'Agregar Vendedor'}
+            {vendedorEditando?.nombre_tienda ? 'Editar Tienda' : 'Agregar Tienda'}
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
