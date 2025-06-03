@@ -1,5 +1,7 @@
 import React from 'react';
 import './Home.css';
+import { Link } from 'react-router-dom';
+
 
 function Home() {
   return (
@@ -14,7 +16,13 @@ function Home() {
         <h3 className="lead white-shadow-text">
           Conecta artesanos y compradores en un solo lugar.
         </h3>
+        <div className="acerca-footer">
+  <p className="texto-footer">
+<Link to="/acerca" className="link-footer">Acerca de Nosotros</Link>
+  </p>
+</div>
       </div>
+      
     </div>
   );
 }

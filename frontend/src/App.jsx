@@ -18,7 +18,7 @@ import VendedorAdmin from './pages/VendedorAdmin';
 import UsuariosAdmin from './pages/UsuariosAdmin';
 import ProductosAdmin from './pages/ProductosAdmin';
 import ProductoDetalleCliente from './pages/ProductoDetalleCliente';
-
+import Acerca from './pages/Acerca';
 
 
 
@@ -53,6 +53,8 @@ function App() {
           <Route path="/admin-vendedores" element={<VendedorAdmin />} />
           <Route path="/admin-usuarios" element={<UsuariosAdmin />} />
           <Route path="/admin-productos" element={<ProductosAdmin />} />
+          <Route path="/acerca" element={<Acerca />} />
+
 
         </Routes>
       </Router>

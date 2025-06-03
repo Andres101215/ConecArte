@@ -62,3 +62,43 @@
     font-size: 8vw !important;
   }
 }
+
+.acerca-footer {
+  
+  margin-top: 100px;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+.link-footer {
+  color: #888;
+  text-decoration: none;
+}
+
+.link-footer:hover {
+  text-decoration: underline;
+  color: #555;
+}
+
+.acerca-container {
+  max-width: 800px;
+  margin: 100px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+
+.titulo-acerca {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.texto-acerca {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #444;
+}
+
