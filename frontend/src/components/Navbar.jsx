@@ -50,9 +50,6 @@ function Navbar() {
                   <Link className="nav-link" to="/register-seller">Registrar Tienda</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/movimientos">Movimientos</Link>
-                </li>
-                <li className="nav-item">
                   <Link className="nav-link" to="/panelSeller">Ver Productos</Link>
                 </li>
               </>

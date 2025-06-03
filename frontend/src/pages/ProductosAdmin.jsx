@@ -139,25 +139,14 @@ function ProductosAdmin() {
     if (window.confirm("¿Deseas eliminar este producto?")) {
       try {
         // 1. Eliminar producto de la colección general
-        const response = await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${producto._id}`, {
+        const response = await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${producto._id}/${producto.id_artesano}`, {
           method: "DELETE"
         });
 
         if (!response.ok) {
           throw new Error("Error al eliminar el producto");
         }
-
-        // 2. Quitar la referencia del producto en la tienda
-        await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/eliminar-producto/${producto.id_artesano}`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            id_producto: producto._id
-          })
-        });
-
+        
         await obtenerProductos();
 
       } catch (error) {
