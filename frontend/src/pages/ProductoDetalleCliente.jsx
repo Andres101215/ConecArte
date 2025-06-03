@@ -1,5 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import { FaShoppingCart, FaEnvelope } from 'react-icons/fa';
 import { FaUserCircle } from 'react-icons/fa';
 import './ProductoDetalle.css';
 
@@ -136,12 +137,11 @@ export default function ProductoDetalle() {
                 </button>
 
                 <button
-                  className="btn btn-secondary d-flex align-items-center"
-                  onClick={() => navigate('/perfil')}
-                  title="Ir al perfil"
+                  className="btn btn-warning carrito-flotante"
+                  onClick={() => navigate("/pasarela")}
+                  style={{ zIndex: 1050 }}
                 >
-                  <FaUserCircle size={20} className="me-1" />
-                  Perfil
+                  <FaShoppingCart size={24} />
                 </button>
               </div>
 
