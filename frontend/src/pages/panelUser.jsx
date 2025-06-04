@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "./panelUser.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FaShoppingCart, FaEnvelope } from 'react-icons/fa';
-
 import ModalBuzon from '../components/ModalBuzon';
 
 function PanelUser() {
@@ -13,25 +12,7 @@ function PanelUser() {
   const [error, setError] = useState(null);
   const [showBuzon, setShowBuzon] = useState(false);
 
-  const id_usuario = localStorage.getItem('id_usuario');
-
-  const conversaciones = [
-    {
-      user: 'cliente_juan',
-      mensajes: [
-        { emisor: false, texto: 'Hola, estoy interesado en tu producto.' },
-        { emisor: true, texto: '¡Perfecto! ¿Cuál te gusta?' }
-      ]
-    },
-    {
-      user: 'comprador_maria',
-      mensajes: [
-        { emisor: true, texto: 'Hola, ¿necesitas ayuda?' },
-        { emisor: false, texto: 'Sí, ¿qué colores tienes?' }
-      ]
-    }
-  ];
-
+  // Cargar productos
   useEffect(() => {
     fetch("https://conecarte-8olx.onrender.com/productos/productos")
       .then((res) => {
@@ -80,19 +61,18 @@ function PanelUser() {
 
       {/* Botón del buzón */}
       <button
-  className="btn btn-primary position-fixed d-flex align-items-center justify-content-center"
-  style={{ bottom: '90px', right: '20px', zIndex: 1050, width: '50px', height: '50px', borderRadius: '50%' }}
-  onClick={() => setShowBuzon(true)}
-  title="Buzón de mensajes"
->
-  <FaEnvelope size={20} />
-</button>
+        className="btn btn-primary position-fixed d-flex align-items-center justify-content-center"
+        style={{ bottom: '90px', right: '20px', zIndex: 1050, width: '50px', height: '50px', borderRadius: '50%' }}
+        onClick={() => setShowBuzon(true)}
+        title="Buzón de mensajes"
+      >
+        <FaEnvelope size={20} />
+      </button>
 
       {/* Modal del buzón */}
       <ModalBuzon
         show={showBuzon}
         onHide={() => setShowBuzon(false)}
-        conversaciones={conversaciones}
       />
     </div>
   );

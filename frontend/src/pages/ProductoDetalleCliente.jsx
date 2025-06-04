@@ -135,14 +135,6 @@ export default function ProductoDetalle() {
                 <button className="btn btn-outline-dark" onClick={() => setMostrarModal(true)}>
                   Ver Reseñas
                 </button>
-
-                <button
-                  className="btn btn-warning carrito-flotante"
-                  onClick={() => navigate("/pasarela")}
-                  style={{ zIndex: 1050 }}
-                >
-                  <FaShoppingCart size={24} />
-                </button>
               </div>
 
               {mensaje && <div className="alert alert-info mt-3">{mensaje}</div>}
@@ -151,6 +143,14 @@ export default function ProductoDetalle() {
         </div>
       </div>
 
+      <button
+        className="btn btn-warning carrito-flotante"
+        onClick={() => navigate("/pasarela")}
+        style={{ zIndex: 1050 }}
+      >
+        <FaShoppingCart size={24} />
+      </button>
+      
       {/* Modal de Reseñas */}
       {mostrarModal && (
         <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>

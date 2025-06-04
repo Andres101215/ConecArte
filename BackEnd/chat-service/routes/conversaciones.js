@@ -1,6 +1,6 @@
 const express = require("express");
 const Conversacion = require("../models/Conversacion");
-
+const Mensaje = require('../models/Mensaje');
 const router = express.Router();
 
 
@@ -62,6 +62,57 @@ router.delete("/:id", async (req, res) => {
     } catch (error) {
         res.status(500).json({ mensaje: "Error al eliminar la conversacion", error });
     }
+});
+
+router.get('/usuario/:id_usuario', async (req, res) => {
+  const { id_usuario } = req.params;
+  try {
+    const conversaciones = await Conversacion.find({
+      $or: [
+        { id_emisor: id_usuario },
+        { id_receptor: id_usuario }
+      ]
+    });
+    res.status(200).json(conversaciones);
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener las conversaciones', error });
+  }
+});
+
+
+// POST: Crear un mensaje y vincularlo a una conversación
+router.post('/mensaje', async (req, res) => {
+  try {
+    const { id_conversacion, id_emisor, contenido } = req.body;
+
+    if (!id_conversacion || !id_emisor || !contenido) {
+      return res.status(400).json({ error: 'Faltan datos requeridos' });
+    }
+
+    // Crear nuevo mensaje
+    const nuevoMensaje = new Mensaje({
+      id_emisor,
+      contenido,
+      fecha_envio: new Date(),
+      estado_mensaje: 'no leído' // o el estado inicial que uses
+    });
+
+    const mensajeGuardado = await nuevoMensaje.save();
+
+    // Agregar mensaje a la conversación
+    const conversacion = await Conversacion.findById(id_conversacion);
+    if (!conversacion) {
+      return res.status(404).json({ error: 'Conversación no encontrada' });
+    }
+
+    conversacion.mensajes.push(mensajeGuardado._id);
+    await conversacion.save();
+
+    res.status(201).json({ mensaje: 'Mensaje enviado y guardado', mensajeGuardado });
+  } catch (error) {
+    console.error("Error al crear mensaje:", error);
+    res.status(500).json({ error: 'Error del servidor' });
+  }
 });
 
 module.exports = router;
