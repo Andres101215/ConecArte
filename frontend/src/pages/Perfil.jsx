@@ -13,7 +13,7 @@ function Perfil() {
 
   useEffect(() => {
     if (id_usuario) {
-      fetch(`https://conecarte-8olx.onrender.com/usuarios/usuarios/${id_usuario}`)
+      fetch(`https://conecarte-1.onrender.com/usuarios/usuarios/${id_usuario}`)
         .then(res => res.json())
         .then(data => {
           setUser(data);
