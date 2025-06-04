@@ -12,14 +12,14 @@ const ModalBuzon = ({ show, onHide }) => {
 
     const obtenerConversaciones = async () => {
       try {
-        const res = await fetch(`https://conecarte-1.onrender.com/conversaciones/usuario/${id_usuario}`);
+        const res = await fetch(`https://conecarte-1.onrender.com/conversaciones/conversaciones/usuario/${id_usuario}`);
         const data = await res.json();
 
         const conversacionesConMensajes = await Promise.all(
           data.map(async (conv) => {
             const mensajesData = await Promise.all(
               conv.mensajes.map(async (idMensaje) => {
-                const resMsg = await fetch(`https://conecarte-1.onrender.com/mensajes/${idMensaje}`);
+                const resMsg = await fetch(`https://conecarte-1.onrender.com/mensajes/mensajes/${idMensaje}`);
                 return await resMsg.json();
               })
             );
@@ -63,7 +63,7 @@ const ModalBuzon = ({ show, onHide }) => {
     const id_usuario = localStorage.getItem('id_usuario');
 
     try {
-      const res = await fetch('https://conecarte-1.onrender.com/conversaciones/mensaje', {
+      const res = await fetch('https://conecarte-1.onrender.com/conversaciones/conversaciones/mensaje', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
