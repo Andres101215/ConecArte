@@ -10,7 +10,7 @@ const WompiRespuesta = () => {
 
   useEffect(() => {
     if (transactionId) {
-      fetch(`https://conecarte-8olx.onrender.com/pagos/pagos/verificar`, {
+      fetch(`https://conecarte-1.onrender.com/pagos/pagos/verificar`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ transactionId }),
@@ -18,7 +18,7 @@ const WompiRespuesta = () => {
         .then(res => res.json())
         .then(data => {
           if (data.status === "APPROVED") {
-            fetch(`https://conecarte-8olx.onrender.com/facturas/facturas/facturar`, {
+            fetch(`https://conecarte-1.onrender.com/facturas/facturas/facturar`, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({

@@ -24,7 +24,7 @@ const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refre
       console.log("Nuevo producto a guardar:", nuevoProducto);
 
       // 1. Guardar producto en la colección
-      const response = await fetch("https://conecarte-8olx.onrender.com/productos/productos", {
+      const response = await fetch("https://conecarte-1.onrender.com/productos/productos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -37,7 +37,7 @@ const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refre
       
 
       // 2. Asociar el producto a la tienda
-      await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/agregar-producto/`+id, {
+      await fetch(`https://conecarte-1.onrender.com/vendedores/vendedores/agregar-producto/`+id, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json"
@@ -56,7 +56,7 @@ const ModalProductos = ({ show, onHide, productos, nombreTienda, idTienda, refre
   };
   const handleBorrar = async (producto) => {
     try {
-      const response = await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${producto._id}/${idTienda._id}`, {
+      const response = await fetch(`https://conecarte-1.onrender.com/productos/productos/${producto._id}/${idTienda._id}`, {
         method: "DELETE"
       });
 

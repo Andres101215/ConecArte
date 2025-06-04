@@ -34,7 +34,7 @@ export default function RegisterSeller() {
 
 
     try {
-      const response = await fetch("https://conecarte-8olx.onrender.com/vendedores/vendedores", {
+      const response = await fetch("https://conecarte-1.onrender.com/vendedores/vendedores", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -12,7 +12,7 @@ function UsuariosAdmin() {
 
   const obtenerUsuarios = async () => {
     try {
-      const response = await fetch("https://conecarte-8olx.onrender.com/usuarios/usuarios");
+      const response = await fetch("https://conecarte-1.onrender.com/usuarios/usuarios");
       const data = await response.json();
       setUsuarios(data);
     } catch (err) {
@@ -61,7 +61,7 @@ function UsuariosAdmin() {
     const esNuevo = !usuarios.some(u => u._id === usuarioEditado._id);
 
     try {
-      const url = `https://conecarte-8olx.onrender.com/usuarios/usuarios${esNuevo ? '' : `/${usuarioEditado._id}`}`;
+      const url = `https://conecarte-1.onrender.com/usuarios/usuarios${esNuevo ? '' : `/${usuarioEditado._id}`}`;
       const metodo = esNuevo ? "POST" : "PUT";
 
       const response = await fetch(url, {
@@ -89,7 +89,7 @@ function UsuariosAdmin() {
   const eliminarUsuario = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este usuario?')) {
       try {
-        const response = await fetch(`https://conecarte-8olx.onrender.com/usuarios/usuarios/${id}`, {
+        const response = await fetch(`https://conecarte-1.onrender.com/usuarios/usuarios/${id}`, {
           method: "DELETE"
         });
 

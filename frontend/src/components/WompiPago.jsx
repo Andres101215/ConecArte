@@ -10,7 +10,7 @@ const WompiPago = ({ pasarelaDePago }) => {
 
   useEffect(() => {
     const fetchAndRenderWidget = async () => {
-      const res = await fetch("https://conecarte-8olx.onrender.com/pagos/pagos/firmar", {
+      const res = await fetch("https://conecarte-1.onrender.com/pagos/pagos/firmar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

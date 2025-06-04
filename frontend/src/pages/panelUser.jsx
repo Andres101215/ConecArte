@@ -14,7 +14,7 @@ function PanelUser() {
 
   // Cargar productos
   useEffect(() => {
-    fetch("https://conecarte-8olx.onrender.com/productos/productos")
+    fetch("https://conecarte-1.onrender.com/productos/productos")
       .then((res) => {
         if (!res.ok) throw new Error("Error al obtener productos");
         return res.json();

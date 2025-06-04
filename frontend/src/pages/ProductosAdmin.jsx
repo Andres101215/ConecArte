@@ -20,7 +20,7 @@ function ProductosAdmin() {
 
   const obtenerTiendas = async () => {
     try {
-      const response = await fetch("https://conecarte-8olx.onrender.com/vendedores/vendedores");
+      const response = await fetch("https://conecarte-1.onrender.com/vendedores/vendedores");
       const data = await response.json();
       setVendedores(data);
     } catch (err) {
@@ -30,7 +30,7 @@ function ProductosAdmin() {
 
   const obtenerProductos = async () => {
     try {
-      const response = await fetch("https://conecarte-8olx.onrender.com/productos/productos");
+      const response = await fetch("https://conecarte-1.onrender.com/productos/productos");
       const data = await response.json();
       setProductos(data);
     } catch (err) {
@@ -88,7 +88,7 @@ function ProductosAdmin() {
       }
 
       const esNuevo = !productoSeleccionado._id;
-      const url = `https://conecarte-8olx.onrender.com/productos/productos${esNuevo ? '' : `/${productoSeleccionado._id}`}`;
+      const url = `https://conecarte-1.onrender.com/productos/productos${esNuevo ? '' : `/${productoSeleccionado._id}`}`;
       const metodo = esNuevo ? "POST" : "PUT";
 
       const productoFinal = {
@@ -112,7 +112,7 @@ function ProductosAdmin() {
       const productoGuardado = await response.json();
 
       if (esNuevo && productoSeleccionado.id_artesano) {
-        await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/agregar-producto/${productoSeleccionado.id_artesano}`, {
+        await fetch(`https://conecarte-1.onrender.com/vendedores/vendedores/agregar-producto/${productoSeleccionado.id_artesano}`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json"
@@ -139,7 +139,7 @@ function ProductosAdmin() {
     if (window.confirm("¿Deseas eliminar este producto?")) {
       try {
         // 1. Eliminar producto de la colección general
-        const response = await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${producto._id}/${producto.id_artesano}`, {
+        const response = await fetch(`https://conecarte-1.onrender.com/productos/productos/${producto._id}/${producto.id_artesano}`, {
           method: "DELETE"
         });
 

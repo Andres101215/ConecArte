@@ -32,7 +32,7 @@ router.post('/facturar', async (req, res) => {
     const { id_usuario, metodo_pago, referencia } = req.body;
 
     // 1. Obtener carrito del microservicio de carrito
-    const { data: carrito } = await axios.get(`https://conecarte-8olx.onrender.com/carritos/carritos/usuario/${id_usuario}`);
+    const { data: carrito } = await axios.get(`https://conecarte-1.onrender.com/carritos/carritos/usuario/${id_usuario}`);
 
     if (!carrito || !carrito.productos || carrito.productos.length === 0) {
       return res.status(404).json({ mensaje: 'El carrito está vacío o no existe' });
@@ -53,7 +53,7 @@ router.post('/facturar', async (req, res) => {
     await nuevaFactura.save();
 
     // 3. Vaciar carrito (suponiendo que existe un endpoint para esto)
-    await axios.put(`https://conecarte-8olx.onrender.com/carritos/carritos/vaciar/${id_usuario}`);
+    await axios.put(`https://conecarte-1.onrender.com/carritos/carritos/vaciar/${id_usuario}`);
 
     res.status(201).json({ mensaje: 'Factura generada y carrito vaciado', factura: nuevaFactura });
 

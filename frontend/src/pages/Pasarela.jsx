@@ -14,7 +14,7 @@ function CarritoUsuario() {
     if (!confirmar) return;
 
     try {
-      const response = await fetch(`https://conecarte-8olx.onrender.com/carritos/carritos/${id_usuario}/${id_producto}`, {
+      const response = await fetch(`https://conecarte-1.onrender.com/carritos/carritos/${id_usuario}/${id_producto}`, {
         method: "DELETE",
       });
 
@@ -37,7 +37,7 @@ function CarritoUsuario() {
       return;
     }
 
-    fetch(`https://conecarte-8olx.onrender.com/carritos/carritos/usuario/${id_usuario}`)
+    fetch(`https://conecarte-1.onrender.com/carritos/carritos/usuario/${id_usuario}`)
       .then((res) => {
         if (!res.ok) throw new Error("No se pudo obtener el carrito");
         return res.json();

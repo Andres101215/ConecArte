@@ -77,7 +77,7 @@ router.get("/producto/:id", async (req, res) => {
 
     const reseñasConNombre = await Promise.all(reseñas.map(async (r) => {
       try {
-        const respuesta = await axios.get(`https://conecarte-8olx.onrender.com/usuarios/usuarios/${r.id_usuario}`);
+        const respuesta = await axios.get(`https://conecarte-1.onrender.com/usuarios/usuarios/${r.id_usuario}`);
         const username = respuesta.data.username;
         return { ...r._doc, nombre_usuario: username };
       } catch (e) {

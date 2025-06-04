@@ -87,7 +87,7 @@ router.post("/", async (req, res) => {
         // Crear el carrito para el usuario llamando al otro servicio
         if (nuevoUsuario.tipo_usuario == "usuario") {
             try {
-                await axios.post("https://conecarte-8olx.onrender.com/carritos/carritos", {
+                await axios.post("https://conecarte-1.onrender.com/carritos/carritos", {
                     id_usuario: nuevoUsuario._id,
                     productos: [],
                     total: 0

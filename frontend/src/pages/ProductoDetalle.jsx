@@ -22,12 +22,12 @@ export default function ProductoDetalle() {
   const id_usuario = localStorage.getItem("id_usuario");
 
   useEffect(() => {
-    fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`)
+    fetch(`https://conecarte-1.onrender.com/productos/productos/${id}`)
       .then(res => res.json())
       .then(data => setProducto(data))
       .catch(err => console.error(err));
 
-    fetch(`https://conecarte-8olx.onrender.com/resenas/resenas/producto/${id}`)
+    fetch(`https://conecarte-1.onrender.com/resenas/resenas/producto/${id}`)
       .then(res => res.json())
       .then(data => setReseñas(data))
       .catch(err => console.error(err));
@@ -40,7 +40,7 @@ export default function ProductoDetalle() {
     }
 
     try {
-      const res = await fetch("https://conecarte-8olx.onrender.com/carritos/carritos/agregar", {
+      const res = await fetch("https://conecarte-1.onrender.com/carritos/carritos/agregar", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

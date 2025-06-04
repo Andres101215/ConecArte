@@ -43,7 +43,7 @@ export default function RegisterUser() {
     };
 
     try {
-      const response = await fetch('https://conecarte-8olx.onrender.com/usuarios/usuarios', {
+      const response = await fetch('https://conecarte-1.onrender.com/usuarios/usuarios', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

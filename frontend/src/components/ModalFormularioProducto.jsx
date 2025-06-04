@@ -84,7 +84,7 @@ const ModalFormularioProducto = ({ show, onHide, onGuardar, producto, modoEdicio
       }
 
       // 3. Actualizar producto
-      await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`, {
+      await fetch(`https://conecarte-1.onrender.com/productos/productos/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

@@ -33,7 +33,7 @@ function PanelSeller() {
   useEffect(() => {
     const obtenerTiendas = async () => {
       try {
-        const response = await fetch('https://conecarte-8olx.onrender.com/vendedores/vendedores/tiendas/' + id_usuario);
+        const response = await fetch('https://conecarte-1.onrender.com/vendedores/vendedores/tiendas/' + id_usuario);
         const data = await response.json();
 
         console.log("Respuesta del backend:", data);
@@ -42,14 +42,14 @@ function PanelSeller() {
           for (const tienda of data) {
 
             try {
-              let response = await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/productos/${tienda._id}`);
+              let response = await fetch(`https://conecarte-1.onrender.com/vendedores/vendedores/productos/${tienda._id}`);
               let productos = await response.json();
 
               let dataProductos = [];
 
               for (const id of productos.productos) {
                 try {
-                  const response = await fetch(`https://conecarte-8olx.onrender.com/productos/productos/${id}`);
+                  const response = await fetch(`https://conecarte-1.onrender.com/productos/productos/${id}`);
                   const productoData = await response.json();
                   dataProductos.push(productoData);
                 } catch (error) {

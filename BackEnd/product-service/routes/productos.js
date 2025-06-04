@@ -86,7 +86,7 @@ router.delete("/:id/:id_vendedor", async (req, res) => {
 
     // Quitar el ID del producto de todas las tiendas que lo tengan
      try {
-        const response = await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/${id}`);
+        const response = await fetch(`https://conecarte-1.onrender.com/vendedores/vendedores/${id}`);
         const data = await response.json();
 
         const productos = data.productos_ids

@@ -14,7 +14,7 @@ function VendedorAdmin() {
 
   const obtenerTiendas = async () => {
     try {
-      const response = await fetch("https://conecarte-8olx.onrender.com/vendedores/vendedores");
+      const response = await fetch("https://conecarte-1.onrender.com/vendedores/vendedores");
       const data = await response.json();
       setVendedores(data);
     } catch (err) {
@@ -24,7 +24,7 @@ function VendedorAdmin() {
 
   const obtenerVendedores = async () => {
     try {
-      const response = await fetch("https://conecarte-8olx.onrender.com/usuarios/usuarios/");
+      const response = await fetch("https://conecarte-1.onrender.com/usuarios/usuarios/");
       const data = await response.json();
 
       const vendedores = data.filter((u) => u.tipo_usuario === "vendedor");
@@ -67,7 +67,7 @@ function VendedorAdmin() {
     const esNuevo = !vendedores.some(v => v._id === vendedorEditando._id);
 
     try {
-      const url = `https://conecarte-8olx.onrender.com/vendedores/vendedores${esNuevo ? '' : `/${vendedorEditando._id}`}`;
+      const url = `https://conecarte-1.onrender.com/vendedores/vendedores${esNuevo ? '' : `/${vendedorEditando._id}`}`;
       const metodo = esNuevo ? "POST" : "PUT";
 
       const response = await fetch(url, {
@@ -95,7 +95,7 @@ function VendedorAdmin() {
   const eliminarVendedor = async (id) => {
     if (window.confirm('¿Estás seguro de eliminar este vendedor?')) {
       try {
-        const response = await fetch(`https://conecarte-8olx.onrender.com/vendedores/vendedores/${id}`, {
+        const response = await fetch(`https://conecarte-1.onrender.com/vendedores/vendedores/${id}`, {
           method: "DELETE"
         });
 
