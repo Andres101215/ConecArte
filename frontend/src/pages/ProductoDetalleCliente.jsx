@@ -101,6 +101,33 @@ export default function ProductoDetalle() {
     );
   }
 
+const handleContactar = async () => {
+  if (!id_usuario) {
+    setMensaje("Debes iniciar sesión para contactar al artesano.");
+    return;
+  }
+
+  try {
+    const res = await fetch('https://conecarte-1.onrender.com/conversaciones/conversaciones', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        id_emisor: id_usuario,
+        id_receptor: producto.id_artesano,
+        mensajes:[]
+      })
+    });
+
+    if (!res.ok) throw new Error('Error al crear la conversación');
+
+    navigate('/buzon'); // Redirecciona al buzón una vez creada la conversación
+  } catch (error) {
+    console.error('Error al crear conversación:', error);
+    setMensaje('No se pudo iniciar la conversación.');
+  }
+};
+
+
   return (
     <div className="producto-detalle-fondo position-relative">
       <div className="overlay" style={{ paddingTop: '110px' }}>
@@ -135,6 +162,10 @@ export default function ProductoDetalle() {
                 <button className="btn btn-outline-dark" onClick={() => setMostrarModal(true)}>
                   Ver Reseñas
                 </button>
+
+                <button className="btn btn-info" onClick={handleContactar}>
+                  Preguntar por este producto
+                </button>
               </div>
 
               {mensaje && <div className="alert alert-info mt-3">{mensaje}</div>}
@@ -150,7 +181,7 @@ export default function ProductoDetalle() {
       >
         <FaShoppingCart size={24} />
       </button>
-      
+
       {/* Modal de Reseñas */}
       {mostrarModal && (
         <div className="modal fade show d-block" style={{ backgroundColor: 'rgba(0,0,0,0.5)' }}>
