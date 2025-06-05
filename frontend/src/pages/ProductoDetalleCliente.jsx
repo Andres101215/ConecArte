@@ -110,19 +110,25 @@ const handleContactar = async () => {
   }
 
   try {
+    // Obtener los datos de la tienda a partir de su ID
+    const tiendaRes = await fetch(`https://conecarte-1.onrender.com/vendedores/vendedores/${producto.id_artesano}`);
+    if (!tiendaRes.ok) throw new Error("No se pudo obtener la tienda.");
+    const tienda = await tiendaRes.json();
+
+    // Crear la conversación con el id_usuario de la tienda
     const res = await fetch('https://conecarte-1.onrender.com/conversaciones/conversaciones', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         id_emisor: id_usuario,
-        id_receptor: producto.id_artesano,
-        mensajes:[]
+        id_receptor: tienda.id_usuario,  // usar id_usuario de la tienda
+        mensajes: []
       })
     });
 
     if (!res.ok) throw new Error('Error al crear la conversación');
 
-   setShowBuzon(true)
+    setShowBuzon(true);
   } catch (error) {
     console.error('Error al crear conversación:', error);
     setMensaje('No se pudo iniciar la conversación.');

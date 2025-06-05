@@ -27,16 +27,36 @@ router.get("/:id", async (req, res) => {
     }
 });
 
-//Crear una nuevo conversacion (POST)
+// Crear una nueva conversación (POST)
 router.post("/", async (req, res) => {
-    try {
-        const nuevoConversacion = new Conversacion(req.body);
-        await nuevoConversacion.save();
-        res.status(201).json(nuevoConversacion);
-    } catch (error) {
-        res.status(500).json({ mensaje: "Error al crear la conversacion", error });
+  const { id_emisor, id_receptor, mensajes } = req.body;
+
+  try {
+    // Verificar si ya existe una conversación entre los dos usuarios
+    const conversacionExistente = await Conversacion.findOne({
+      $or: [
+        { id_emisor, id_receptor },
+        { id_emisor: id_receptor, id_receptor: id_emisor }
+      ]
+    });
+
+    if (conversacionExistente) {
+      return res.status(200).json({
+        mensaje: "Ya existe una conversación entre estos usuarios.",
+        conversacion: conversacionExistente
+      });
     }
+
+    // Crear la conversación si no existe
+    const nuevaConversacion = new Conversacion({ id_emisor, id_receptor, mensajes });
+    await nuevaConversacion.save();
+
+    res.status(201).json(nuevaConversacion);
+  } catch (error) {
+    res.status(500).json({ mensaje: "Error al crear la conversacion", error });
+  }
 });
+
 
 //Actualizar una conversacion por ID (PUT)
 router.put("/:id", async (req, res) => {

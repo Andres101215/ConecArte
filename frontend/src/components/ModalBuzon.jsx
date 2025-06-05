@@ -32,7 +32,7 @@ const ModalBuzon = ({ show, onHide }) => {
 
             return {
               id_conversacion: conv._id,
-              user: usuarioData.username, // Mostrará el nombre de usuario en la lista
+              user: usuarioData.nombre+"  "+usuarioData.apellido+" ("+usuarioData.username+")", // Mostrará el nombre de usuario en la lista
               id_usuario: otroUsuarioId,  // Puedes conservarlo por si necesitas enviarle algo luego
               mensajes: mensajesData.map(msg => ({
                 emisor: msg.id_emisor === id_usuario,
@@ -141,10 +141,11 @@ const ModalBuzon = ({ show, onHide }) => {
                 >
                   <div
                     className={`p-2 rounded ${msg.emisor ? 'bg-primary text-white' : 'bg-light text-dark'}`}
-                    style={{ maxWidth: '75%' }}
+                    style={{ maxWidth: '75%', wordBreak: 'break-word', whiteSpace: 'pre-wrap' }}
                   >
                     {msg.texto}
                   </div>
+
                 </div>
               ))
             ) : (
