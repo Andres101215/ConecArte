@@ -70,9 +70,9 @@ function Navbar() {
             )}
 
             {/* Usuario administrador */}
-            {user && user.email === "andres@admin.com" && (
+            {user?.tipo_usuario === "administrador" && (
               <li className="nav-item">
-                <Link className="nav-link" to="/panelAdmin">Editar</Link>
+                <Link className="nav-link" to="/panelAdmin">Inicio</Link>
               </li>
             )}
 
