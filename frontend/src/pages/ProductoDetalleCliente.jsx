@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { FaShoppingCart, FaEnvelope } from 'react-icons/fa';
 import { FaUserCircle } from 'react-icons/fa';
+import ModalBuzon from '../components/ModalBuzon';
 import './ProductoDetalle.css';
 
 export default function ProductoDetalle() {
@@ -15,6 +16,7 @@ export default function ProductoDetalle() {
   const [reseñas, setReseñas] = useState([]);
   const [nuevaReseña, setNuevaReseña] = useState({ calificacion: 0, comentario: '' });
   const [actualizarReseñas, setActualizarReseñas] = useState(false);
+  const [showBuzon, setShowBuzon] = useState(false);
 
   const id_usuario = localStorage.getItem('id_usuario');
 
@@ -120,7 +122,7 @@ const handleContactar = async () => {
 
     if (!res.ok) throw new Error('Error al crear la conversación');
 
-    navigate('/buzon'); // Redirecciona al buzón una vez creada la conversación
+   setShowBuzon(true)
   } catch (error) {
     console.error('Error al crear conversación:', error);
     setMensaje('No se pudo iniciar la conversación.');
@@ -181,6 +183,12 @@ const handleContactar = async () => {
       >
         <FaShoppingCart size={24} />
       </button>
+
+       {/* Modal del buzón */}
+      <ModalBuzon
+        show={showBuzon}
+        onHide={() => setShowBuzon(false)}
+      />
 
       {/* Modal de Reseñas */}
       {mostrarModal && (
